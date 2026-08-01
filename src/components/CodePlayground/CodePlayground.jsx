@@ -5,17 +5,79 @@ import { CopyButton } from '../CopyButton/CopyButton';
 import './CodePlayground.css';
 
 export const CodePlayground = ({
+  exampleId = '',
   initialHtml = '',
   initialCss = '',
   isSassMode = false
 }) => {
+  const storageKey = exampleId ? `learn_css_saved_${exampleId}` : null;
+
   const [activeTab, setActiveTab] = useState(isSassMode ? 'css' : 'html');
-  const [htmlCode, setHtmlCode] = useState(initialHtml);
-  const [cssCode, setCssCode] = useState(initialCss);
+
+  const [htmlCode, setHtmlCode] = useState(() => {
+    if (storageKey) {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.html !== undefined) return parsed.html;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return initialHtml;
+  });
+
+  const [cssCode, setCssCode] = useState(() => {
+    if (storageKey) {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.css !== undefined) return parsed.css;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return initialCss;
+  });
+
+  const [hasSavedData, setHasSavedData] = useState(() => {
+    if (storageKey) {
+      return !!localStorage.getItem(storageKey);
+    }
+    return false;
+  });
+
+  const [saveStatus, setSaveStatus] = useState('idle');
+
+  const handleSave = () => {
+    if (storageKey) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({
+          html: htmlCode,
+          css: cssCode,
+          updatedAt: new Date().toISOString()
+        }));
+        setHasSavedData(true);
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      } catch (e) {
+        console.error('Failed to save code:', e);
+      }
+    }
+  };
 
   const handleReset = () => {
     setHtmlCode(initialHtml);
     setCssCode(initialCss);
+    if (storageKey) {
+      localStorage.removeItem(storageKey);
+      setHasSavedData(false);
+    }
+    setSaveStatus('idle');
   };
 
   const currentCodeToCopy = activeTab === 'html' ? htmlCode : cssCode;
@@ -41,6 +103,18 @@ export const CodePlayground = ({
         </div>
 
         <div className="action-group">
+          {hasSavedData && (
+            <span className="saved-badge" title="Đã lưu bản nháp tùy chỉnh trên trình duyệt này">
+              ● Đã lưu
+            </span>
+          )}
+          <button
+            className={`save-btn ${saveStatus === 'saved' ? 'saved' : ''}`}
+            onClick={handleSave}
+            title="Lưu lại code đã sửa vào trình duyệt"
+          >
+            {saveStatus === 'saved' ? '✓ Đã lưu!' : '💾 Lưu'}
+          </button>
           <button
             className="reset-btn"
             onClick={handleReset}

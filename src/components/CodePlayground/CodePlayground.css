@@ -50,6 +50,46 @@
   gap: 8px;
 }
 
+.saved-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 3px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.save-btn {
+  padding: 4px 12px;
+  border-radius: var(--border-radius-sm);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
+}
+
+.save-btn.saved {
+  background: linear-gradient(135deg, #059669, #10b981);
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
 .reset-btn {
   padding: 4px 10px;
   border-radius: var(--border-radius-sm);

@@ -24,6 +24,7 @@ export const ExampleCard = ({ example, isSassMode = false }) => {
 
       {isOpen && (
         <CodePlayground
+          exampleId={example.id || example.title}
           initialHtml={example.html || ''}
           initialCss={example.css || ''}
           isSassMode={isSassMode}
