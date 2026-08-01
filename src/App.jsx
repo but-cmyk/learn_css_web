@@ -3,20 +3,16 @@ import { Header } from './components/Header/Header';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { ContentArea } from './components/ContentArea/ContentArea';
 import { allKnowledgeData } from './data';
-import { useSearch } from './hooks/useSearch';
 import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
 const MainLayout = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeTopicId, setActiveTopicId] = useState('');
-
-  const filteredCategories = useSearch(allKnowledgeData, searchQuery);
 
   // Flatten all topics for default active topic detection
   const allTopics = useMemo(() => {
-    return filteredCategories.flatMap(cat => cat.topics);
-  }, [filteredCategories]);
+    return allKnowledgeData.flatMap(cat => cat.topics);
+  }, []);
 
   // Handle topic selection
   const handleTopicClick = (topicId) => {
@@ -24,7 +20,7 @@ const MainLayout = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Set default active topic when data loads or search changes
+  // Set default active topic when data loads
   useEffect(() => {
     if (allTopics.length > 0) {
       const exists = allTopics.some(t => t.id === activeTopicId);
@@ -36,21 +32,17 @@ const MainLayout = () => {
 
   return (
     <div className="app-container">
-      <Header
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+      <Header />
 
       <div className="app-body">
         <Sidebar
-          categories={filteredCategories}
+          categories={allKnowledgeData}
           activeTopicId={activeTopicId}
           onTopicClick={handleTopicClick}
         />
 
         <ContentArea
-          categories={filteredCategories}
-          searchQuery={searchQuery}
+          categories={allKnowledgeData}
           activeTopicId={activeTopicId}
         />
       </div>

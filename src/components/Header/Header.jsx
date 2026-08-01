@@ -1,9 +1,8 @@
 import React from 'react';
-import { SearchBar } from '../SearchBar/SearchBar';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 import './Header.css';
 
-export const Header = ({ searchQuery, onSearchChange }) => {
+export const Header = () => {
   return (
     <header className="header">
       <div className="header-brand">
@@ -12,10 +11,6 @@ export const Header = ({ searchQuery, onSearchChange }) => {
           Learn<span className="logo-highlight">CSS</span>
         </h1>
         <span className="version-badge">Full Guide</span>
-      </div>
-
-      <div className="header-search">
-        <SearchBar value={searchQuery} onChange={onSearchChange} />
       </div>
 
       <div className="header-actions">

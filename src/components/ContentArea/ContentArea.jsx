@@ -2,48 +2,8 @@ import React from 'react';
 import { TopicSection } from '../TopicSection/TopicSection';
 import './ContentArea.css';
 
-export const ContentArea = ({ categories, searchQuery, activeTopicId }) => {
-  if (categories.length === 0) {
-    return (
-      <main className="content-area empty">
-        <div className="empty-state">
-          <span className="empty-icon">🔍</span>
-          <h3>Không tìm thấy kết quả</h3>
-          <p>Không tìm thấy chủ đề hoặc ví dụ nào phù hợp với từ khóa "<strong>{searchQuery}</strong>".</p>
-        </div>
-      </main>
-    );
-  }
-
-  // SEARCH MODE: render all matching categories & topics
-  if (searchQuery && searchQuery.trim() !== '') {
-    return (
-      <main className="content-area">
-        {categories.map((category) => (
-          <div key={category.category} className="category-block">
-            <div className="category-banner" style={{ '--cat-color': category.categoryColor }}>
-              <span className="banner-icon">{category.categoryIcon}</span>
-              <div className="banner-info">
-                <h2 className="banner-title">{category.categoryTitle}</h2>
-                <span className="banner-count">{category.topics.length} chủ đề phù hợp</span>
-              </div>
-            </div>
-
-            <div className="category-topics">
-              {category.topics.map((topic) => (
-                <TopicSection
-                  key={topic.id}
-                  topic={topic}
-                  isSassMode={category.category === 'sass'}
-                  categoryColor={category.categoryColor}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </main>
-    );
-  }
+export const ContentArea = ({ categories, activeTopicId }) => {
+  if (categories.length === 0) return null;
 
   // SINGLE VIEW MODE: find the active category and topic
   let activeCategory = null;
