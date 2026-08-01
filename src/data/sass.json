@@ -1,0 +1,155 @@
+{
+  "category": "sass",
+  "categoryTitle": "SASS / SCSS",
+  "categoryIcon": "🎨",
+  "categoryColor": "#e74c8c",
+  "topics": [
+    {
+      "id": "sass-variables",
+      "title": "1. Biến Trong SASS ($variable)",
+      "description": "SASS cho phép lưu trữ thông tin (màu sắc, font, kích thước) vào biến để tái sử dụng toàn dự án. Lợi ích lớn nhất là tính đồng nhất: khi cần đổi màu thương hiệu, bạn chỉ cần sửa giá trị biến 1 lần duy nhất thay vì tìm/thay thế hàng nghìn dòng CSS.",
+      "examples": [
+        {
+          "id": "variables-example",
+          "title": "Khai Báo & Sử Dụng Biến SASS",
+          "explanation": "Biến bắt đầu bằng ký tự '$'. Khác với CSS Variables (--var), biến SASS được xử lý tại thời điểm BUILD (compile time), không tồn tại trên trình duyệt. Lợi thế là SASS có các hàm xử lý màu như darken(), lighten() rất mạnh.",
+          "css": "// 1. Khai báo biến\n$primary-color: #6c5ce7;\n$text-color: #2d3436;\n$border-radius: 8px;\n$spacing-md: 16px;\n\n// 2. Sử dụng biến\n.hero-card {\n  background-color: $primary-color;\n  color: white;\n  border-radius: $border-radius;\n  padding: $spacing-md;\n}\n\n.btn-outline {\n  color: $primary-color;\n  border: 2px solid $primary-color;\n  \n  // SASS có sẵn các hàm xử lý màu tuyệt vời!\n  &:hover {\n    background-color: lighten($primary-color, 30%);\n    border-color: darken($primary-color, 10%);\n  }\n}",
+          "notes": "💡 Trong dự án thực tế, bạn thường có 1 file riêng _variables.scss chứa toàn bộ biến của dự án, sau đó @use vào các file component khác để sử dụng."
+        }
+      ]
+    },
+    {
+      "id": "nesting",
+      "title": "2. Lồng Nhau (Nesting) & Ký Tự Cha (&)",
+      "description": "SASS cho phép viết CSS lồng nhau theo cấu trúc HTML. Điều này giúp code gọn gàng, tránh lặp lại class cha nhiều lần và thể hiện rõ cấu trúc DOM. Tuy nhiên, lồng quá sâu sẽ tạo ra CSS specificity cực cao, khó ghi đè.",
+      "examples": [
+        {
+          "id": "nesting-example",
+          "title": "Nesting & Ký Tự Tham Chiếu Parent (&)",
+          "explanation": "Thay vì viết .nav ul, .nav li, .nav a, bạn có thể lồng chúng vào trong khối .nav. Ký tự '&' (ampersand) đại diện cho class cha, CỰC KỲ HỮU ÍCH để viết các trạng thái (:hover, :focus) hoặc BEM class (.btn--large).",
+          "css": ".nav-menu {\n  background: #333;\n  padding: 10px;\n\n  ul {\n    list-style: none;\n    margin: 0;\n  }\n\n  li {\n    display: inline-block;\n  }\n\n  a {\n    color: white;\n    text-decoration: none;\n    padding: 8px 12px;\n\n    // & đại diện cho '.nav-menu a'\n    &:hover {\n      background: #e74c8c;\n      border-radius: 4px;\n    }\n\n    &.active {\n      font-weight: bold;\n      border-bottom: 2px solid white;\n    }\n  }\n}\n\n// Sử dụng & với BEM (rất phổ biến)\n.btn {\n  padding: 10px 20px;\n  \n  &--primary {\n    background: blue;\n  }\n  &--large {\n    font-size: 1.2rem;\n  }\n}",
+          "notes": "⚠️ Inception Rule: KHÔNG BAO GIỜ lồng quá 3 cấp (vd: .nav > ul > li > a > span). Lồng quá sâu khiến CSS sinh ra rất dài và specificity quá cao."
+        }
+      ]
+    },
+    {
+      "id": "partials-import",
+      "title": "3. Partials & Modules (@use)",
+      "description": "SASS cho phép chia nhỏ CSS thành nhiều file nhỏ gọn để dễ quản lý. Các file partial bắt đầu bằng dấu gạch dưới (vd: _buttons.scss) sẽ không sinh ra file CSS riêng biệt. Sau đó dùng @use để gom chúng lại.",
+      "examples": [
+        {
+          "id": "use-modules",
+          "title": "Tổ Chức File Với @use",
+          "explanation": "Trước đây dùng @import, nhưng giờ SASS khuyên dùng @use (hệ thống Module). @use tạo namespace, tránh đụng độ tên biến/mixin giữa các file.",
+          "css": "// File: _variables.scss\n$brand: #e74c8c;\n$radius: 6px;\n\n// File: _buttons.scss\n// Import biến bằng @use, gọi biến qua namespace 'variables'\n@use 'variables' as vars;\n\n.btn {\n  background: vars.$brand;\n  border-radius: vars.$radius;\n  color: white;\n  padding: 10px 20px;\n}\n\n// File: main.scss\n// Gom tất cả component lại để build ra 1 file main.css duy nhất\n@use 'variables';\n@use 'buttons';\n@use 'header';\n@use 'footer';",
+          "notes": "Kiến trúc 7-1 phổ biến: chia SASS thành 7 folder (base, components, layout, pages, themes, abstracts, vendors) và 1 file main.scss. Đây là chuẩn mực dự án lớn."
+        }
+      ]
+    },
+    {
+      "id": "mixins",
+      "title": "4. Mixins (@mixin & @include)",
+      "description": "Mixin là các khối CSS có thể TÁI SỬ DỤNG và nhận THAM SỐ truyền vào (giống hệt function trong lập trình). Dùng mixin cho những pattern lặp lại nhiều nhưng cần thay đổi vài thông số (ví dụ: tạo flexbox center, tạo nút với các màu khác nhau).",
+      "examples": [
+        {
+          "id": "mixin-basic",
+          "title": "Tạo & Gọi Mixin Với Tham Số",
+          "explanation": "Dùng @mixin để định nghĩa. Dùng @include để gọi. Bạn có thể truyền giá trị mặc định cho tham số để không phải truyền lại nếu không cần thiết.",
+          "css": "// 1. Mixin căn giữa Flexbox\n@mixin flex-center($direction: row) {\n  display: flex;\n  flex-direction: $direction;\n  justify-content: center;\n  align-items: center;\n}\n\n// 2. Mixin tạo Button (có màu mặc định là xanh)\n@mixin custom-btn($bg-color: #3498db, $text-color: #fff) {\n  background-color: $bg-color;\n  color: $text-color;\n  padding: 10px 20px;\n  border-radius: 6px;\n  border: none;\n  cursor: pointer;\n  transition: 0.2s;\n\n  &:hover {\n    background-color: darken($bg-color, 15%);\n  }\n}\n\n// SỬ DỤNG MIXIN:\n.hero-container {\n  @include flex-center(column); // Truyền tham số column\n  height: 300px;\n}\n\n.btn-primary {\n  @include custom-btn(); // Lấy màu mặc định\n}\n\n.btn-danger {\n  @include custom-btn(#e74c3c); // Truyền màu đỏ\n}",
+          "notes": "Mixin đặc biệt hữu ích khi viết Media Queries trong dự án lớn: @mixin tablet { @media (min-width: 768px) { @content; } }"
+        }
+      ]
+    },
+    {
+      "id": "extend",
+      "title": "5. Kế Thừa (@extend & %placeholder)",
+      "description": "@extend chia sẻ tập hợp các thuộc tính CSS giữa các selector. Thay vì copy-paste code, @extend gom các class có chung thuộc tính lại với nhau trong CSS sinh ra, giúp file CSS cuối cùng nhẹ hơn (DRY - Don't Repeat Yourself).",
+      "examples": [
+        {
+          "id": "extend-placeholder",
+          "title": "Sử Dụng %placeholder Với @extend",
+          "explanation": "Placeholder (%) là class 'ẩn' — KHÔNG BAO GIỜ được sinh ra trong CSS cuối trừ khi có selector nào đó @extend nó. Đây là cách an toàn nhất để dùng kế thừa.",
+          "css": "// 1. Định nghĩa Placeholder (bắt đầu bằng %)\n%message-box {\n  border: 1px solid #ccc;\n  padding: 14px;\n  border-radius: 8px;\n  font-size: 14px;\n  margin-bottom: 12px;\n}\n\n// 2. Kế thừa thuộc tính\n.message-info {\n  @extend %message-box;\n  background-color: #e3f2fd;\n  color: #1976d2;\n  border-color: #90caf9;\n}\n\n.message-error {\n  @extend %message-box;\n  background-color: #ffebee;\n  color: #c62828;\n  border-color: #ef9a9a;\n}\n\n/* \n💡 CSS sinh ra sẽ tự nhóm lại gọn gàng:\n.message-info, .message-error {\n  border: 1px solid #ccc; padding: 14px; ...\n}\n.message-info { background: ... }\n.message-error { background: ... }\n*/",
+          "notes": "Mixin vs Extend: Mixin dùng khi khối CSS có THAM SỐ thay đổi (truyền màu, cỡ). Extend dùng khi khối CSS HOÀN TOÀN GIỐNG NHAU (tái sử dụng tĩnh)."
+        }
+      ]
+    },
+    {
+      "id": "functions",
+      "title": "6. Hàm Tự Tạo (@function)",
+      "description": "Trong khi Mixin trả về CẢ MỘT KHỐI thuộc tính CSS (display, color...), Function chỉ tính toán và trả về MỘT GIÁ TRỊ (vd: 15px, #fff). Rất hay dùng để quy đổi đơn vị px sang rem, hoặc tính grid columns.",
+      "examples": [
+        {
+          "id": "custom-function",
+          "title": "Hàm Quy Đổi px sang rem (@function)",
+          "explanation": "Thay vì nhẩm tính 24px = 1.5rem, bạn có thể tạo hàm tự động chia cho 16. Code sẽ rõ ràng dễ đọc hơn rất nhiều.",
+          "css": "// Khai báo biến cơ sở\n$base-font-size: 16px;\n\n// Tạo hàm tính toán (hàm phải có @return)\n@function px-to-rem($px-value) {\n  @return ($px-value / $base-font-size) * 1rem;\n}\n\n// Sử dụng hàm\n.hero-title {\n  font-size: px-to-rem(48px); // Trả về 3rem\n  margin-bottom: px-to-rem(24px); // Trả về 1.5rem\n}\n\n.card {\n  padding: px-to-rem(20px);\n  border-radius: px-to-rem(8px);\n}",
+          "notes": "SASS cũng có sẵn rất nhiều Built-in modules mạnh mẽ như math (math.div, math.round), color (color.adjust, color.mix), string (string.to-upper-case)."
+        }
+      ]
+    },
+    {
+      "id": "maps-lists",
+      "title": "7. Cấu Trúc Dữ Liệu (Maps & Lists)",
+      "description": "SASS Maps tương tự Object trong JS (key-value), Lists tương tự Array. Rất tuyệt vời để cấu hình Design System: lưu toàn bộ màu sắc, z-index, breakpoints vào 1 Map và lấy ra dùng dần.",
+      "examples": [
+        {
+          "id": "sass-maps",
+          "title": "Quản Lý Design System Với SASS Map",
+          "explanation": "Dùng map.get() để lấy giá trị từ map. Điều này giúp cấu hình tập trung tại 1 nơi, không bị vứt biến lung tung.",
+          "css": "@use 'sass:map';\n\n// Định nghĩa Map cấu hình màu sắc\n$theme-colors: (\n  'primary': #007bff,\n  'secondary': #6c757d,\n  'success': #28a745,\n  'danger': #dc3545,\n  'warning': #ffc107\n);\n\n// Định nghĩa Map cấu hình z-index\n$z-layers: (\n  'base': 1,\n  'dropdown': 1000,\n  'sticky': 1020,\n  'modal': 1050\n);\n\n// Sử dụng giá trị từ Map\n.btn-primary {\n  background-color: map.get($theme-colors, 'primary');\n}\n\n.site-header {\n  position: sticky;\n  top: 0;\n  z-index: map.get($z-layers, 'sticky');\n}\n\n.modal-backdrop {\n  position: fixed;\n  z-index: map.get($z-layers, 'modal');\n}",
+          "notes": "Sử dụng z-index map là best practice để tránh tình trạng z-index: 9999 đè nhau trong dự án lớn!"
+        }
+      ]
+    },
+    {
+      "id": "control-directives",
+      "title": "8. Câu Lệnh Điều Kiện & Vòng Lặp",
+      "description": "SASS cho phép viết logic như ngôn ngữ lập trình thực thụ: @if/@else, @for, @each, @while. Thường dùng nhất là @each để tự động sinh ra hàng loạt class CSS utility (như Tailwind CSS) từ một Map.",
+      "examples": [
+        {
+          "id": "each-loop",
+          "title": "Vòng Lặp @each Tạo Utility Classes Tự Động",
+          "explanation": "Duyệt qua $theme-colors map để tạo ra class .text-primary, .text-danger, .bg-primary... hoàn toàn tự động chỉ với 5 dòng code!",
+          "css": "$theme-colors: (\n  'primary': #6c5ce7,\n  'success': #2ecc71,\n  'warning': #f1c40f,\n  'danger': #e74c3c\n);\n\n// Duyệt qua Map màu sắc\n@each $name, $color in $theme-colors {\n  // #{} là Interpolation (chèn biến vào tên class)\n  .text-#{$name} {\n    color: $color;\n  }\n  \n  .bg-#{$name} {\n    background-color: $color;\n  }\n}\n\n/*\nCSS Sinh ra tự động:\n.text-primary { color: #6c5ce7; }\n.bg-primary { background-color: #6c5ce7; }\n.text-success { color: #2ecc71; }\n... (tạo đủ 8 class)\n*/",
+          "notes": "Các CSS framework như Bootstrap, Bulma đều sử dụng kỹ thuật @each loop này để sinh ra hàng ngàn class utility với rất ít code SASS gốc."
+        },
+        {
+          "id": "if-else",
+          "title": "Điều Kiện @if / @else",
+          "explanation": "Tùy biến kết quả CSS sinh ra dựa vào điều kiện. Rất hữu ích khi viết Mixin phức tạp.",
+          "css": "// Mixin tự động chọn màu chữ trắng/đen tùy vào nền\n@mixin text-contrast($bg-color) {\n  background-color: $bg-color;\n  \n  // Dùng hàm lightness() có sẵn của SASS\n  @if lightness($bg-color) > 50% {\n    color: #000; // Nền sáng -> Chữ đen\n  } @else {\n    color: #fff; // Nền tối -> Chữ trắng\n  }\n}\n\n.card-dark {\n  @include text-contrast(#2d3436); // Sinh ra color: #fff\n}\n\n.card-light {\n  @include text-contrast(#f1f2f6); // Sinh ra color: #000\n}",
+          "notes": "Interpolation #{} cũng là tính năng quan trọng: cho phép chèn động bất cứ thứ gì vào selector name, property name hoặc url."
+        }
+      ]
+    },
+    {
+      "id": "built-in-modules",
+      "title": "9. Modules Mặc Định Của SASS",
+      "description": "SASS cung cấp các module cài sẵn với rất nhiều hàm tiện ích: sass:math, sass:color, sass:string, sass:list, sass:map. Bạn phải @use chúng trước khi dùng.",
+      "examples": [
+        {
+          "id": "color-math-modules",
+          "title": "Sử Dụng Modules color & math",
+          "explanation": "math.div() thay thế cho toán tử / (vì / có thể bị nhầm lẫn trong CSS). color.adjust() hoặc color.mix() giúp tạo palette màu cực nhanh.",
+          "css": "@use 'sass:math';\n@use 'sass:color';\n\n$base-color: #3498db;\n$container-width: 1200px;\n\n.container {\n  // Thay vì 1200px / 2 -> dùng math.div()\n  width: math.div($container-width, 2); // 600px\n}\n\n.btn-hover {\n  // Pha màu base với 20% màu trắng (tạo tint)\n  background-color: color.mix(#fff, $base-color, 20%);\n}\n\n.btn-active {\n  // Tăng/giảm HSL\n  background-color: color.adjust($base-color, $lightness: -10%);\n}",
+          "notes": "Từ SASS Dart mới nhất, việc dùng hàm lighten() / darken() bị coi là legacy, chuẩn mới là dùng module sass:color."
+        }
+      ]
+    },
+    {
+      "id": "responsive-mixins",
+      "title": "10. Mixin Responsive (@content)",
+      "description": "Đây là ứng dụng thực tế THÔNG DỤNG NHẤT của Mixin: Quản lý Media Queries. Thay vì viết @media (min-width: 768px) lặp lại nhiều lần dễ sai sót, bạn tạo mixin và truyền nội dung CSS vào qua @content.",
+      "examples": [
+        {
+          "id": "media-query-mixin",
+          "title": "Mixin Quản Lý Breakpoints Dễ Đọc",
+          "explanation": "@content là vị trí mà khối CSS bên trong @include sẽ được chèn vào. Kỹ thuật này giúp code responsive cực kỳ sạch sẽ và dễ bảo trì.",
+          "css": "// 1. Định nghĩa map Breakpoints\n$breakpoints: (\n  'tablet': 768px,\n  'desktop': 1024px,\n  'large': 1440px\n);\n\n// 2. Định nghĩa Mixin\n@mixin respond-to($size) {\n  // Lấy giá trị px từ map\n  $bp: map-get($breakpoints, $size);\n  \n  @media (min-width: $bp) {\n    @content; // Nơi chèn khối CSS con\n  }\n}\n\n// 3. Sử Dụng Cực Kỳ Dễ Đọc\n.hero-title {\n  font-size: 24px;\n  \n  @include respond-to('tablet') {\n    font-size: 36px; // Chèn vào khối @content\n  }\n  \n  @include respond-to('desktop') {\n    font-size: 48px;\n  }\n}",
+          "notes": "Code responsive viết TRỰC TIẾP bên trong element (Nesting), không cần nhảy xuống cuối file để viết media query. Đây là lợi ích lớn nhất của SASS khi dàn layout!"
+        }
+      ]
+    }
+  ]
+}

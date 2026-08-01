@@ -1,0 +1,42 @@
+.code-editor-container {
+  height: 100%;
+  min-height: 280px;
+  width: 100%;
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+}
+
+.code-editor-container .cm-editor {
+  height: 100%;
+  min-height: 280px;
+  border-radius: 0;
+  background-color: var(--bg-code) !important;
+}
+
+.code-editor-container .cm-scroller {
+  font-family: var(--font-code) !important;
+}
+
+.code-editor-container .cm-content,
+.code-editor-container .cm-gutters {
+  padding-bottom: 24px !important;
+}
+
+/* Custom scrollbar for CodeMirror */
+.code-editor-container .cm-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.code-editor-container .cm-scroller::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.code-editor-container .cm-scroller::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.code-editor-container .cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}

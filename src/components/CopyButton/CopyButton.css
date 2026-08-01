@@ -1,0 +1,29 @@
+.copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+  background: var(--accent-light);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.copy-button.copied {
+  background: #2ecc71;
+  color: #ffffff;
+  border-color: #2ecc71;
+}
+
+.copy-icon {
+  font-size: 0.85rem;
+}

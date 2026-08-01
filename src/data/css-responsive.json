@@ -1,0 +1,121 @@
+{
+  "category": "css-responsive",
+  "categoryTitle": "CSS Responsive",
+  "categoryIcon": "📱",
+  "categoryColor": "#2ecc71",
+  "topics": [
+    {
+      "id": "media-queries",
+      "title": "1. Media Queries (@media)",
+      "description": "Media Queries cho phép áp dụng CSS khác nhau tùy theo điều kiện màn hình (chiều rộng, chiều cao, orientation...). Đây là nền tảng của Responsive Web Design — giúp 1 website duy nhất hiển thị tốt trên mọi thiết bị từ điện thoại đến màn hình 4K.",
+      "examples": [
+        {
+          "id": "media-breakpoints",
+          "title": "Breakpoints Phổ Biến (min-width & max-width)",
+          "explanation": "Breakpoints là các điểm 'ngắt' mà layout thay đổi. min-width: 768px nghĩa là 'từ 768px trở lên'. max-width: 767px nghĩa là 'từ 767px trở xuống'. Mobile-first dùng min-width (viết CSS mobile trước, nâng cấp cho desktop). Desktop-first dùng max-width.",
+          "html": "<div class=\"responsive-demo\">\n  <div class=\"r-col\">Cột 1</div>\n  <div class=\"r-col\">Cột 2</div>\n  <div class=\"r-col\">Cột 3</div>\n</div>\n<p class=\"breakpoint-info\">Thu hẹp/mở rộng preview để xem layout thay đổi!</p>",
+          "css": "/* === Mobile First: viết CSS cho mobile trước === */\n.responsive-demo {\n  display: flex;\n  flex-direction: column; /* Mobile: xếp dọc */\n  gap: 8px;\n}\n\n.r-col {\n  background: #00b894;\n  color: white;\n  padding: 16px;\n  text-align: center;\n  border-radius: 6px;\n  font-weight: bold;\n}\n\n/* Tablet trở lên (≥ 500px): xếp ngang */\n@media (min-width: 500px) {\n  .responsive-demo {\n    flex-direction: row;\n  }\n  .r-col {\n    flex: 1;\n    background: #0984e3;\n  }\n}\n\n.breakpoint-info {\n  font-size: 11px;\n  color: #999;\n  margin-top: 8px;\n  text-align: center;\n}",
+          "notes": "Breakpoints phổ biến: 480px (Mobile L), 768px (Tablet), 1024px (Laptop), 1200px (Desktop), 1440px (Large). Dự án thực tế thường chỉ cần 3 breakpoints: mobile/tablet/desktop."
+        },
+        {
+          "id": "media-combined",
+          "title": "Kết Hợp Nhiều Điều Kiện & Orientation",
+          "explanation": "Có thể kết hợp nhiều điều kiện bằng 'and', 'or (,)', 'not'. Ngoài width, còn check orientation (portrait/landscape), prefers-color-scheme (dark/light mode hệ thống), hover (thiết bị có chuột không), prefers-reduced-motion (tắt animation cho accessibility).",
+          "html": "<div class=\"media-card\">\n  <p>Thẻ này đổi màu theo kích thước viewport</p>\n</div>",
+          "css": ".media-card {\n  padding: 20px;\n  border-radius: 10px;\n  font-weight: bold;\n  text-align: center;\n  background: #6c5ce7;\n  color: white;\n}\n\n/* Chỉ áp dụng cho màn hình từ 400px-800px */\n@media (min-width: 400px) and (max-width: 800px) {\n  .media-card {\n    background: #00b894;\n  }\n}\n\n/* Khi người dùng bật Dark Mode trên hệ thống */\n@media (prefers-color-scheme: dark) {\n  .media-card {\n    background: #2d3436;\n    border: 1px solid #636e72;\n  }\n}\n\n/* Tắt animation cho người bị say sóng hình */\n@media (prefers-reduced-motion: reduce) {\n  * {\n    animation: none !important;\n    transition: none !important;\n  }\n}",
+          "notes": "prefers-color-scheme: dark là cách detect Dark Mode hệ thống — dùng kết hợp CSS Variables để tạo Dark Mode tự động. prefers-reduced-motion là yêu cầu accessibility quan trọng."
+        }
+      ]
+    },
+    {
+      "id": "mobile-first",
+      "title": "2. Chiến Lược Mobile-First",
+      "description": "Mobile-First nghĩa là viết CSS cho màn hình NHỎ NHẤT trước (điện thoại), sau đó dùng min-width media queries để 'nâng cấp' giao diện cho tablet, desktop. Lợi ích: trang mobile tải nhanh (ít CSS ghi đè), ép bạn ưu tiên nội dung quan trọng nhất, Google ưu tiên mobile-first indexing cho SEO.",
+      "examples": [
+        {
+          "id": "mobile-first-pattern",
+          "title": "Áp Dụng Mobile-First Cho Layout Card",
+          "explanation": "Bước 1: Viết CSS mặc định cho mobile (1 cột, font nhỏ). Bước 2: @media min-width: 600px nâng lên 2 cột cho tablet. Bước 3: @media min-width: 1024px nâng lên 3 cột cho desktop. Code CSS chỉ THÊM, không phải GHI ĐÈ → hiệu quả hơn.",
+          "html": "<div class=\"mf-grid\">\n  <div class=\"mf-card\">🎯 Card 1</div>\n  <div class=\"mf-card\">📦 Card 2</div>\n  <div class=\"mf-card\">🚀 Card 3</div>\n  <div class=\"mf-card\">💎 Card 4</div>\n</div>",
+          "css": "/* BƯỚC 1: Mobile mặc định — 1 cột đơn giản */\n.mf-grid {\n  display: grid;\n  grid-template-columns: 1fr; /* 1 cột */\n  gap: 10px;\n}\n\n.mf-card {\n  background: #6c5ce7;\n  color: white;\n  padding: 18px;\n  border-radius: 10px;\n  text-align: center;\n  font-weight: bold;\n}\n\n/* BƯỚC 2: Tablet (≥ 500px) — 2 cột */\n@media (min-width: 500px) {\n  .mf-grid {\n    grid-template-columns: repeat(2, 1fr);\n  }\n}\n\n/* Lưu ý: Code ở đây chỉ THÊM (2 cột), không ghi đè padding/color — tiết kiệm! */",
+          "notes": "Desktop-first (dùng max-width) bắt đầu từ layout phức tạp rồi giản lược cho mobile → phải viết nhiều CSS ghi đè hơn. Google khuyên dùng Mobile-First cho SEO và performance."
+        }
+      ]
+    },
+    {
+      "id": "responsive-images",
+      "title": "3. Hình Ảnh Responsive",
+      "description": "Ảnh phải co giãn theo container mà không bị méo, không vượt quá kích thước gốc, và nên load kích thước phù hợp với thiết bị (tránh tải ảnh 4K trên điện thoại). object-fit kiểm soát cách ảnh lấp đầy khung chứa.",
+      "examples": [
+        {
+          "id": "object-fit-demo",
+          "title": "max-width: 100% & object-fit: cover",
+          "explanation": "max-width: 100% đảm bảo ảnh không bao giờ rộng hơn container cha. object-fit: cover giữ tỷ lệ ảnh và lấp đầy khung (có thể cắt 1 phần). object-fit: contain hiện toàn bộ ảnh (có thể có khoảng trống). Trong thực tế, cover dùng cho avatar/thumbnail, contain dùng cho ảnh sản phẩm.",
+          "html": "<div class=\"img-compare\">\n  <div class=\"img-box\">\n    <div class=\"img-placeholder cover\">COVER</div>\n    <p>object-fit: cover</p>\n  </div>\n  <div class=\"img-box\">\n    <div class=\"img-placeholder contain\">CONTAIN</div>\n    <p>object-fit: contain</p>\n  </div>\n</div>",
+          "css": ".img-compare {\n  display: flex;\n  gap: 16px;\n}\n\n.img-box {\n  text-align: center;\n  font-size: 12px;\n  color: #666;\n}\n\n.img-placeholder {\n  width: 120px;\n  height: 90px;\n  border: 2px solid #6c5ce7;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: bold;\n  color: white;\n  font-size: 11px;\n}\n\n/* cover: lấp đầy, có thể cắt */\n.cover {\n  background: linear-gradient(45deg, #6c5ce7 30%, #a29bfe 70%);\n}\n\n/* contain: hiện hết, có thể thừa chỗ */\n.contain {\n  background: linear-gradient(45deg, #00b894 30%, #55efc4 70%);\n  background-size: 80% 60%;\n  background-repeat: no-repeat;\n  background-position: center;\n}",
+          "notes": "Responsive image best practice: img { max-width: 100%; height: auto; display: block; }. Dùng <picture> + <source> hoặc srcset để serve ảnh khác nhau cho từng kích thước màn hình — tiết kiệm bandwidth."
+        }
+      ]
+    },
+    {
+      "id": "responsive-typography",
+      "title": "4. Chữ Responsive (Fluid Typography)",
+      "description": "Thay vì viết nhiều media query cho font-size, dùng clamp() hoặc đơn vị viewport (vw) để cỡ chữ tự động co giãn MƯỢT MÀ. Đây là kỹ thuật hiện đại giúp giảm đáng kể số dòng CSS responsive.",
+      "examples": [
+        {
+          "id": "fluid-type",
+          "title": "clamp() — Font Size Linh Hoạt",
+          "explanation": "font-size: clamp(1rem, 2.5vw, 2rem) → cỡ chữ tối thiểu 1rem trên mobile, tối đa 2rem trên desktop, và co giãn mượt theo viewport ở giữa. Thay thế hoàn toàn 3-4 media queries chỉ bằng 1 dòng!",
+          "html": "<h1 class=\"fluid-h1\">Tiêu Đề Co Giãn Mượt</h1>\n<p class=\"fluid-p\">Đoạn văn bản cũng tự co giãn. Kỹ thuật này giúp typography luôn đẹp trên mọi kích thước màn hình mà không cần viết media query.</p>",
+          "css": ".fluid-h1 {\n  /* clamp(tối_thiểu, lý_tưởng, tối_đa) */\n  font-size: clamp(1.3rem, 4vw, 2.5rem);\n  color: #d63031;\n  margin-bottom: 8px;\n  line-height: 1.2;\n}\n\n.fluid-p {\n  font-size: clamp(0.85rem, 1.8vw, 1.1rem);\n  color: #555;\n  line-height: 1.6;\n}",
+          "notes": "Công thức tính giá trị preferred: (max - min) / (viewport_max - viewport_min) × 100vw. Hoặc đơn giản: dùng clamp(1rem, 1rem + 1vw, 1.5rem) rồi điều chỉnh. Công cụ online: utopia.fyi"
+        }
+      ]
+    },
+    {
+      "id": "viewport-units",
+      "title": "5. Viewport Units (vw, vh, dvh, svh)",
+      "description": "Viewport units tính theo kích thước cửa sổ trình duyệt: 1vw = 1% chiều rộng, 1vh = 1% chiều cao. Hay dùng cho hero section (height: 100vh), full-screen layout. Trên mobile, vh gặp vấn đề thanh URL ẩn/hiện → CSS mới có dvh (dynamic viewport height) để fix.",
+      "examples": [
+        {
+          "id": "viewport-hero",
+          "title": "Hero Section Full Viewport",
+          "explanation": "height: 100vh tạo section chiếm đúng 100% chiều cao cửa sổ — hiệu ứng 'full-screen' cho landing page. Kết hợp flexbox căn giữa nội dung cho hero section hoàn hảo.",
+          "html": "<div class=\"hero-section\">\n  <h2 class=\"hero-title\">Hero Section</h2>\n  <p>Chiều cao = 100% viewport (dùng vh)</p>\n</div>",
+          "css": ".hero-section {\n  /* 100vh = full chiều cao viewport */\n  height: 50vh; /* Dùng 50vh trong demo cho dễ xem */\n  min-height: 200px;\n  background: linear-gradient(135deg, #2d3436, #636e72);\n  color: white;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  border-radius: 10px;\n  text-align: center;\n}\n\n.hero-title {\n  font-size: clamp(1.5rem, 5vw, 3rem); /* Font theo vw */\n  margin-bottom: 8px;\n}",
+          "notes": "⚠️ Trên mobile: 100vh có thể cao hơn viewport thật do thanh URL browser. Dùng 100dvh (dynamic) hoặc 100svh (small) thay thế. Fallback: height: 100vh; height: 100dvh;"
+        }
+      ]
+    },
+    {
+      "id": "container-queries",
+      "title": "6. Container Queries (@container) — CSS Mới!",
+      "description": "Media Queries dựa vào viewport (cửa sổ browser). Container Queries dựa vào kích thước PHẦN TỬ CHA — giúp component tự responsive dựa trên không gian có sẵn, bất kể viewport. Đây là tính năng CSS mới nhất, giải quyết vấn đề component reusable.",
+      "examples": [
+        {
+          "id": "container-query-demo",
+          "title": "Component Responsive Theo Container Cha",
+          "explanation": "Bước 1: Đặt container-type: inline-size cho phần tử cha. Bước 2: Dùng @container thay @media để viết responsive CSS. Kết quả: component tự thay đổi layout DỰA VÀO KHỔ CHA, không phải viewport → perfect cho design system!",
+          "html": "<div class=\"container-demo\">\n  <div class=\"cq-card\">\n    <div class=\"cq-icon\">📦</div>\n    <div class=\"cq-info\">\n      <h4>Container Queries</h4>\n      <p>CSS mới nhất!</p>\n    </div>\n  </div>\n</div>",
+          "css": "/* Bước 1: Khai báo container */\n.container-demo {\n  container-type: inline-size;\n  container-name: card-container;\n  max-width: 400px;\n  border: 2px dashed #6c5ce7;\n  border-radius: 10px;\n  padding: 12px;\n}\n\n/* Style mặc định (nhỏ): xếp dọc */\n.cq-card {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center;\n  gap: 8px;\n}\n\n.cq-icon {\n  font-size: 2rem;\n}\n\n.cq-info h4 { margin: 0; color: #2d3436; }\n.cq-info p { margin: 0; font-size: 12px; color: #999; }\n\n/* Bước 2: Khi container ≥ 300px → xếp ngang */\n@container card-container (min-width: 300px) {\n  .cq-card {\n    flex-direction: row;\n    text-align: left;\n  }\n}",
+          "notes": "Container Queries được support trên Chrome 105+, Safari 16+, Firefox 110+. Đây là tương lai của responsive CSS — component-level responsive thay vì page-level."
+        }
+      ]
+    },
+    {
+      "id": "responsive-patterns",
+      "title": "7. Mô Hình Layout Responsive",
+      "description": "Các pattern responsive phổ biến nhất trong dự án thực tế: Card Grid tự co giãn, Holy Grail Layout (header/sidebar/content/footer), Sticky Sidebar. Nắm vững các pattern này giúp bạn xây layout nhanh hơn nhiều.",
+      "examples": [
+        {
+          "id": "responsive-card-grid",
+          "title": "Card Grid Tự Động Responsive (No Media Query!)",
+          "explanation": "Kết hợp CSS Grid auto-fit + minmax HOẶC Flexbox flex-wrap + flex-basis để tạo grid card tự động responsive mà KHÔNG cần viết media query. Đây là pattern PHỔI BIẾN NHẤT bạn sẽ dùng trong mọi dự án.",
+          "html": "<div class=\"resp-cards\">\n  <div class=\"resp-card\">🎯 Card A</div>\n  <div class=\"resp-card\">📦 Card B</div>\n  <div class=\"resp-card\">🚀 Card C</div>\n  <div class=\"resp-card\">💎 Card D</div>\n</div>",
+          "css": "/* Cách 1: CSS Grid (khuyến nghị) */\n.resp-cards {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));\n  gap: 10px;\n}\n\n.resp-card {\n  background: linear-gradient(135deg, #a29bfe, #6c5ce7);\n  color: white;\n  padding: 18px;\n  border-radius: 10px;\n  text-align: center;\n  font-weight: bold;\n}\n\n/* Cách 2 (thay thế): Flexbox */\n/*\n.resp-cards {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 10px;\n}\n.resp-card {\n  flex: 1 1 120px;\n}\n*/",
+          "notes": "Grid auto-fit cho kết quả đẹp hơn Flexbox khi số card không chia hết — Grid giãn đều, Flexbox có card cuối bị giãn quá rộng. Trong 90% trường hợp, dùng Grid auto-fit."
+        }
+      ]
+    }
+  ]
+}

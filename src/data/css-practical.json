@@ -1,0 +1,113 @@
+{
+  "category": "css-practical",
+  "categoryTitle": "CSS Thực Tế (Dự Án)",
+  "categoryIcon": "💼",
+  "categoryColor": "#f39c12",
+  "topics": [
+    {
+      "id": "css-reset",
+      "title": "1. CSS Reset & Normalize",
+      "description": "Mỗi trình duyệt (Chrome, Safari, Firefox) đều có CSS mặc định riêng (ví dụ: margin mặc định của thẻ body, p, h1). Để website trông giống nhau trên mọi trình duyệt, bước ĐẦU TIÊN trong mọi dự án là 'reset' hoặc 'normalize' các style này về một chuẩn chung.",
+      "examples": [
+        {
+          "id": "modern-reset",
+          "title": "Modern CSS Reset Mẫu",
+          "explanation": "Đây là phiên bản CSS Reset tối giản, hiện đại (lấy cảm hứng từ Andy Bell). Thường được đặt ở đầu file index.css hoặc global.css trong dự án React/Vue.",
+          "html": "<h1>Heading Mặc Định Của Browser Đã Bị Xóa Margin</h1>\n<p>Đoạn văn này không bị tự động đẩy khoảng cách nữa.</p>\n<button>Nút không còn viền xấu xí</button>\n<img src=\"https://picsum.photos/100/50\" alt=\"demo\">",
+          "css": "/* 1. Box-sizing chuẩn */\n*, *::before, *::after {\n  box-sizing: border-box;\n}\n\n/* 2. Xóa margin mặc định để tự quản lý dễ hơn */\n* {\n  margin: 0;\n  padding: 0;\n}\n\n/* 3. Chiều cao dòng chuẩn, mượt mà */\nbody {\n  line-height: 1.5;\n  -webkit-font-smoothing: antialiased;\n}\n\n/* 4. Hình ảnh dễ làm responsive hơn */\nimg, picture, video, canvas, svg {\n  display: block;\n  max-width: 100%;\n}\n\n/* 5. Khôi phục font-family cho form element */\ninput, button, textarea, select {\n  font: inherit;\n  outline: none;\n}\n\n/* 6. Xóa list style */\nul, ol {\n  list-style: none;\n}",
+          "notes": "Trong dự án thực tế, bạn có thể copy 1 file reset.css chuẩn (như Normalize.css) hoặc dùng reset mặc định của Tailwind CSS. Đừng bắt đầu viết code khi chưa reset CSS!"
+        }
+      ]
+    },
+    {
+      "id": "css-architecture",
+      "title": "2. Kiến Trúc CSS (BEM & Utility)",
+      "description": "Viết CSS cho 1 trang HTML rất dễ. Viết CSS cho 100 trang HTML với 10 developer làm chung mà không bị đụng độ (conflict) class là cực khó. Kiến trúc BEM và Utility-first (Tailwind) là 2 giải pháp phổ biến nhất hiện nay.",
+      "examples": [
+        {
+          "id": "bem-methodology",
+          "title": "Phương Pháp Đặt Tên BEM (Block__Element--Modifier)",
+          "explanation": "BEM giải quyết vấn đề Specificity. Block: Thành phần độc lập (card, btn). Element: Các phần con phụ thuộc Block, cách bằng '__' (card__title). Modifier: Trạng thái hoặc biến thể, cách bằng '--' (btn--primary).",
+          "html": "<div class=\"card\">\n  <h3 class=\"card__title\">Tiêu đề bài viết</h3>\n  <p class=\"card__text\">Nội dung tóm tắt...</p>\n  <button class=\"btn btn--primary\">Đọc thêm</button>\n  <button class=\"btn btn--outline btn--disabled\">Hết hạn</button>\n</div>",
+          "css": "/* Block: Component độc lập */\n.card {\n  padding: 16px;\n  border: 1px solid #ddd;\n  border-radius: 8px;\n}\n\n/* Element: Luôn bắt đầu bằng tên Block + __ */\n.card__title {\n  font-size: 1.2rem;\n  margin-bottom: 8px;\n}\n.card__text {\n  color: #666;\n  margin-bottom: 12px;\n}\n\n/* Modifier: Trạng thái hoặc biến thể của Block/Element + -- */\n.btn {\n  padding: 8px 16px;\n  border-radius: 4px;\n  border: none;\n  cursor: pointer;\n}\n.btn--primary {\n  background: blue;\n  color: white;\n}\n.btn--outline {\n  background: transparent;\n  border: 1px solid blue;\n  color: blue;\n}\n.btn--disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n}",
+          "notes": "Lợi ích BEM: Specificity luôn luôn thấp (chỉ 1 class, không lồng nhau), đọc class HTML là hiểu ngay cấu trúc DOM, cực kỳ an toàn cho dự án lớn."
+        }
+      ]
+    },
+    {
+      "id": "utility-classes",
+      "title": "3. Utility Classes (Helpers)",
+      "description": "Dù bạn dùng BEM hay Modules, dự án vẫn cần các Utility class — những class cực nhỏ chỉ làm ĐÚNG MỘT VIỆC (Single Responsibility). Ví dụ: .mt-2 (margin-top), .text-center, .flex. Tailwind CSS xây dựng toàn bộ framework dựa trên triết lý này.",
+      "examples": [
+        {
+          "id": "common-utilities",
+          "title": "Các Utility Class Hay Dùng Nhất",
+          "explanation": "Tạo ra 1 bộ class có sẵn để căn chỉnh khoảng cách, ẩn/hiện, text thay vì phải viết class BEM mới chỉ để thêm margin-top.",
+          "html": "<!-- Thay vì tạo class .header-title-spacing, dùng utility -->\n<h2 class=\"text-center text-primary mb-3\">Tiêu Đề Dùng Utility</h2>\n<p class=\"d-none md-block\">Đoạn văn này ẩn trên Mobile, hiện trên Desktop.</p>\n<div class=\"flex flex-center gap-2 mt-4\">\n  <button class=\"w-100\">Nút 1</button>\n  <button class=\"w-100\">Nút 2</button>\n</div>",
+          "css": "/* 1. Spacing (Khoảng cách) */\n.mt-1 { margin-top: 4px; }\n.mt-2 { margin-top: 8px; }\n.mt-3 { margin-top: 16px; }\n.mt-4 { margin-top: 24px; }\n.mb-3 { margin-bottom: 16px; }\n.gap-2 { gap: 8px; }\n\n/* 2. Text (Chữ) */\n.text-center { text-align: center; }\n.text-right { text-align: right; }\n.text-primary { color: #007bff; }\n.font-bold { font-weight: bold; }\n\n/* 3. Layout */\n.flex { display: flex; }\n.flex-center { justify-content: center; align-items: center; }\n.w-100 { width: 100%; }\n.d-none { display: none; }\n\n/* 4. Responsive Utility */\n@media (min-width: 768px) {\n  .md-block { display: block; }\n}",
+          "notes": "Framework như Bootstrap (có sẵn utilities) và Tailwind CSS (100% utilities) thống trị thị trường vì nó tiết kiệm hàng trăm giờ nghĩ tên class."
+        }
+      ]
+    },
+    {
+      "id": "z-index-management",
+      "title": "4. Quản Lý Z-index",
+      "description": "z-index là nỗi ác mộng lớn nhất trong dự án! Hiện tượng 'nút z-index: 9999 bị đè bởi cái header z-index: 10' là do Stacking Context (Ngữ Cảnh Xếp Chồng). Trong thực tế, z-index phải được quản lý tập trung.",
+      "examples": [
+        {
+          "id": "z-index-variables",
+          "title": "Quản Lý Z-index Bằng Biến CSS",
+          "explanation": "KHÔNG BAO GIỜ viết z-index: 99 cứng trong file. Lưu toàn bộ z-index vào CSS Variables (hoặc SASS Map) tại root. Điều này tạo ra một 'trục Z' rõ ràng cho toàn dự án.",
+          "html": "<div class=\"app\">\n  <div class=\"content\">Nội dung thường (z-index mặc định)</div>\n  <header class=\"header\">Header Sticky (z-index 100)</header>\n  \n  <!-- Dropdown đè lên header nhưng nằm dưới modal -->\n  <div class=\"dropdown\">Dropdown (z-index 200)</div>\n  \n  <!-- Modal đè lên tất cả -->\n  <div class=\"modal\">Modal Alert (z-index 400)</div>\n</div>",
+          "css": "/* 1. ĐỊNH NGHĨA HỆ THỐNG Z-INDEX */\n:root {\n  --z-negative: -1;\n  --z-elevate: 10;\n  --z-sticky: 100;\n  --z-dropdown: 200;\n  --z-offcanvas: 300;\n  --z-modal: 400;\n  --z-popover: 500;\n  --z-tooltip: 600;\n}\n\n/* 2. SỬ DỤNG */\n.header {\n  position: sticky; top: 0;\n  z-index: var(--z-sticky);\n  background: #6c5ce7; color: white; padding: 10px;\n}\n\n.dropdown {\n  position: absolute; top: 30px; left: 10px;\n  z-index: var(--z-dropdown);\n  background: white; border: 1px solid black;\n  padding: 10px;\n}\n\n.modal {\n  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n  z-index: var(--z-modal);\n  background: #ff7675; color: white; padding: 20px;\n  box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n}",
+          "notes": "⚠️ Quy tắc Vàng: z-index CHỈ HOẠT ĐỘNG trên phần tử có position (relative, absolute, fixed, sticky). Nhớ kiểm tra position nếu z-index không ăn!"
+        }
+      ]
+    },
+    {
+      "id": "scrollbars",
+      "title": "5. Custom Scrollbar & Smooth Scroll",
+      "description": "Thanh cuộn mặc định của Windows/Chrome trông rất thô và làm hỏng thiết kế (MacOS thì thanh mảnh hơn). Frontend dev thường phải custom thanh cuộn cho bảng dữ liệu (table) hoặc sidebar. Ngoài ra smooth scrolling cũng là hiệu ứng bắt buộc.",
+      "examples": [
+        {
+          "id": "custom-scrollbar",
+          "title": "Tạo Thanh Cuộn Đẹp Mắt (Webkit)",
+          "explanation": "Sử dụng pseudo-elements ::-webkit-scrollbar. Note: Chỉ hỗ trợ trên Chrome, Safari, Edge. Firefox dùng scrollbar-width, scrollbar-color.",
+          "html": "<div class=\"scroll-container\">\n  <p>Nội dung 1</p>\n  <p>Nội dung 2</p>\n  <p>Nội dung 3</p>\n  <p>Nội dung 4</p>\n  <p>Nội dung 5</p>\n  <p>Nội dung 6</p>\n  <p>Nội dung 7</p>\n</div>",
+          "css": ".scroll-container {\n  height: 150px;\n  overflow-y: auto;\n  border: 1px solid #ddd;\n  padding: 10px;\n  background: #f8f9fa;\n  \n  /* Chuẩn Firefox */\n  scrollbar-width: thin;\n  scrollbar-color: #a29bfe transparent;\n}\n\n/* Chuẩn Webkit (Chrome, Edge, Safari) */\n/* 1. Độ rộng toàn thanh cuộn */\n.scroll-container::-webkit-scrollbar {\n  width: 6px; /* Nhỏ gọn, thanh lịch */\n  height: 6px; /* Cho cuộn ngang */\n}\n\n/* 2. Track (phần nền) */\n.scroll-container::-webkit-scrollbar-track {\n  background: transparent;\n  border-radius: 4px;\n}\n\n/* 3. Thumb (nút cầm kéo) */\n.scroll-container::-webkit-scrollbar-thumb {\n  background: #a29bfe;\n  border-radius: 4px;\n}\n\n/* 4. Hover Thumb */\n.scroll-container::-webkit-scrollbar-thumb:hover {\n  background: #6c5ce7;\n}",
+          "notes": "Smooth scroll cực dễ: `html { scroll-behavior: smooth; }`. Chỉ 1 dòng CSS là click thẻ anchor (<a href='#section'>) màn hình sẽ trượt mượt mà thay vì nhảy giật cục."
+        }
+      ]
+    },
+    {
+      "id": "css-states",
+      "title": "6. Quản Lý Trạng Thái (States & Feedback)",
+      "description": "Trong UI/UX, 'Feedback' cực kỳ quan trọng. Khi người dùng thao tác, nút phải đổi màu, form lỗi phải viền đỏ. Nếu component không có các trạng thái (hover, focus, disabled, active) — website trông sẽ bị 'chết'.",
+      "examples": [
+        {
+          "id": "button-states",
+          "title": "4 Trạng Thái Của Nút Bấm",
+          "explanation": "Default (mặc định), Hover (rê chuột), Active (đang click xuống), Disabled (vô hiệu hóa). Đừng quên Focus (khi tab bằng bàn phím) cho Accessibility.",
+          "html": "<button class=\"real-btn\">Nút Thường</button>\n<button class=\"real-btn active-demo\">Nút Active (đang click)</button>\n<button class=\"real-btn\" disabled>Nút Disabled (vô hiệu)</button>",
+          "css": ".real-btn {\n  padding: 10px 20px;\n  background: #0984e3;\n  color: white;\n  border: none;\n  border-radius: 6px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n\n/* 1. Trạng thái rê chuột */\n.real-btn:hover:not(:disabled) {\n  background: #74b9ff;\n  transform: translateY(-2px);\n  box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);\n}\n\n/* 2. Trạng thái nhấn chuột xuống (:active) */\n.real-btn:active:not(:disabled), .active-demo {\n  transform: translateY(0);\n  box-shadow: none;\n  background: #076aba;\n}\n\n/* 3. Focus từ bàn phím (Tab) */\n.real-btn:focus-visible {\n  outline: 2px solid #fdcb6e;\n  outline-offset: 2px;\n}\n\n/* 4. Vô hiệu hóa (thuộc tính disabled) */\n.real-btn:disabled {\n  background: #b2bec3;\n  color: #636e72;\n  cursor: not-allowed;\n  opacity: 0.7;\n}",
+          "notes": "CSS mới có :focus-visible — chỉ hiện outline khi focus bằng bàn phím (Tab), không hiện outline xấu xí khi focus bằng chuột click! Luôn dùng :focus-visible thay cho :focus thông thường."
+        }
+      ]
+    },
+    {
+      "id": "aspect-ratio",
+      "title": "7. Tỷ Lệ Khung Hình Khung (Aspect Ratio)",
+      "description": "Làm video YouTube hay thẻ ảnh luôn giữ tỷ lệ 16:9 hoặc 4:3 khi resize trên web responsive từng rất phức tạp (phải dùng padding-bottom hack). Nay CSS đã có thuộc tính native aspect-ratio.",
+      "examples": [
+        {
+          "id": "aspect-ratio-demo",
+          "title": "Thuộc tính aspect-ratio (16:9, 1:1)",
+          "explanation": "Chỉ định tỷ lệ width/height mong muốn. Rất quan trọng khi nhúng Iframe YouTube, Vimeo hoặc làm grid ảnh avatar vuông vuông.",
+          "html": "<div class=\"ratio-container\">\n  <div class=\"ratio-box video-ratio\">\n    Tỷ lệ 16:9 (Video)\n  </div>\n  <div class=\"ratio-box square-ratio\">\n    Tỷ lệ 1:1 (Avatar/Vuông)\n  </div>\n</div>",
+          "css": ".ratio-container {\n  display: flex;\n  gap: 20px;\n  align-items: flex-start;\n}\n\n.ratio-box {\n  width: 150px; /* Chỉ cần set Width, Height sẽ tự tính! */\n  background: #00b894;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: bold;\n  font-size: 11px;\n  text-align: center;\n  border-radius: 8px;\n  object-fit: cover; /* Hữu ích nếu là thẻ img */\n}\n\n/* Tỷ lệ Video YouTube */\n.video-ratio {\n  aspect-ratio: 16 / 9;\n}\n\n/* Tỷ lệ vuông */\n.square-ratio {\n  aspect-ratio: 1 / 1;\n}",
+          "notes": "aspect-ratio còn giải quyết Layout Shift (Cumulative Layout Shift - thuật toán SEO của Google). Khi load ảnh chậm, aspect-ratio giữ sẵn khoảng trống bằng đúng tỷ lệ ảnh, ngăn page không bị giật."
+        }
+      ]
+    }
+  ]
+}

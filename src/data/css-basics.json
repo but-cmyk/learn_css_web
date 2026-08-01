@@ -1,0 +1,444 @@
+{
+  "category": "css-basics",
+  "categoryTitle": "CSS Cơ Bản",
+  "categoryIcon": "🎨",
+  "categoryColor": "#3498db",
+  "topics": [
+    {
+      "id": "selectors",
+      "title": "1. Bộ Chọn (Selectors)",
+      "description": "Selectors là cách CSS 'nhắm' vào phần tử HTML để áp dụng kiểu dáng. Hiểu rõ selectors là nền tảng quan trọng nhất — nếu không chọn đúng phần tử, mọi CSS bạn viết đều vô nghĩa.",
+      "examples": [
+        {
+          "id": "element-selector",
+          "title": "Element Selector (Chọn theo tên thẻ)",
+          "explanation": "Element Selector chọn TẤT CẢ phần tử cùng tên thẻ trong trang. Ví dụ: viết CSS cho thẻ 'p' sẽ ảnh hưởng đến mọi đoạn văn <p> trên trang. Đây là selector cơ bản nhất, thường dùng để đặt style mặc định toàn trang (reset CSS).",
+          "html": "<h3>Tiêu đề H3</h3>\n<p>Đoạn văn thứ nhất — sẽ bị ảnh hưởng</p>\n<p>Đoạn văn thứ hai — cũng bị ảnh hưởng</p>\n<div>Thẻ div — KHÔNG bị ảnh hưởng</div>",
+          "css": "/* Element Selector: chọn MỌI thẻ <p> */\np {\n  color: #3498db;\n  font-size: 16px;\n  font-weight: 600;\n  border-left: 3px solid #3498db;\n  padding-left: 10px;\n  margin-bottom: 8px;\n}",
+          "notes": "Specificity (độ ưu tiên) của Element Selector là thấp nhất: (0,0,0,1). Nghĩa là nếu cùng phần tử có Class Selector, Class sẽ ghi đè Element."
+        },
+        {
+          "id": "class-selector",
+          "title": "Class Selector (.className)",
+          "explanation": "Class Selector bắt đầu bằng dấu chấm (.) và nhắm vào phần tử có thuộc tính class tương ứng. Đây là selector ĐƯỢC DÙNG NHIỀU NHẤT trong thực tế vì một class có thể gán cho nhiều phần tử, và một phần tử có thể mang nhiều class cùng lúc.",
+          "html": "<div class=\"card\">Card thường</div>\n<div class=\"card highlight\">Card nổi bật (2 class)</div>\n<div class=\"card\">Card thường</div>",
+          "css": "/* .card áp dụng cho TẤT CẢ phần tử có class=\"card\" */\n.card {\n  padding: 14px;\n  border: 1px solid #dfe6e9;\n  border-radius: 8px;\n  margin-bottom: 8px;\n  background: #f8f9fa;\n  color: #2d3436;\n}\n\n/* .highlight chỉ áp dụng thêm cho phần tử có class=\"highlight\" */\n.highlight {\n  background-color: #ffeaa7;\n  border-color: #fdcb6e;\n  font-weight: bold;\n  color: #2d3436;\n}",
+          "notes": "Trong thực tế dự án, 90% CSS bạn viết sẽ dùng Class Selector. Quy ước đặt tên phổ biến: BEM (Block__Element--Modifier), ví dụ: .card__title--large."
+        },
+        {
+          "id": "id-selector",
+          "title": "ID Selector (#id)",
+          "explanation": "ID Selector bắt đầu bằng dấu thăng (#) và nhắm vào phần tử có thuộc tính id DUY NHẤT. Mỗi id chỉ được xuất hiện MỘT LẦN trong một trang HTML. ID có độ ưu tiên rất cao nên trong thực tế ít dùng để viết CSS (khó ghi đè), chủ yếu dùng cho JavaScript hoặc anchor link.",
+          "html": "<div id=\"main-header\">Header Chính (ID duy nhất)</div>\n<div>Nội dung khác — không bị ảnh hưởng</div>",
+          "css": "/* #main-header chỉ nhắm đúng 1 phần tử duy nhất */\n#main-header {\n  background: linear-gradient(135deg, #6c5ce7, #a29bfe);\n  color: white;\n  padding: 18px;\n  text-align: center;\n  border-radius: 8px;\n  font-weight: 700;\n  letter-spacing: 0.5px;\n}",
+          "notes": "⚠️ Tránh dùng ID Selector cho CSS trong dự án thực tế! Specificity quá cao (0,1,0,0) khiến rất khó ghi đè. Ưu tiên dùng class thay thế."
+        },
+        {
+          "id": "attribute-selector",
+          "title": "Attribute Selector ([attr])",
+          "explanation": "Attribute Selector chọn phần tử dựa vào thuộc tính HTML (href, type, data-*, placeholder...). Rất hữu ích khi cần style các input form theo type khác nhau, hoặc style các link dựa theo URL đích.",
+          "html": "<input type=\"text\" placeholder=\"Nhập tên\">\n<input type=\"email\" placeholder=\"Nhập email\">\n<input type=\"password\" placeholder=\"Mật khẩu\">\n<a href=\"https://google.com\" target=\"_blank\">Link ngoài ↗</a>",
+          "css": "input {\n  display: block;\n  margin-bottom: 8px;\n  padding: 10px;\n  border: 2px solid #dfe6e9;\n  border-radius: 6px;\n  width: 100%;\n}\n\n/* Chọn input có type=\"password\" */\ninput[type=\"password\"] {\n  border-color: #e74c3c;\n  background: #fff5f5;\n}\n\n/* Chọn input có type=\"email\" */\ninput[type=\"email\"] {\n  border-color: #3498db;\n  background: #f0f8ff;\n}\n\n/* Chọn link mở tab mới */\na[target=\"_blank\"]::after {\n  content: \" ↗\";\n}",
+          "notes": "Các biến thể: [attr^='value'] (bắt đầu bằng), [attr$='value'] (kết thúc bằng), [attr*='value'] (chứa). Rất mạnh để nhắm các data-attribute."
+        },
+        {
+          "id": "pseudo-class",
+          "title": "Pseudo-class (:hover, :focus, :nth-child)",
+          "explanation": "Pseudo-class chọn phần tử dựa trên TRẠNG THÁI (hover, focus, active, visited) hoặc VỊ TRÍ trong cây DOM (first-child, nth-child, last-of-type). Đây là công cụ tạo tương tác người dùng không cần JavaScript.",
+          "html": "<ul class=\"menu\">\n  <li>Trang chủ</li>\n  <li>Sản phẩm</li>\n  <li>Dịch vụ</li>\n  <li>Giới thiệu</li>\n  <li>Liên hệ</li>\n</ul>",
+          "css": ".menu {\n  list-style: none;\n  padding: 0;\n}\n\n.menu li {\n  padding: 10px 14px;\n  cursor: pointer;\n  border-radius: 6px;\n  transition: all 0.2s ease;\n}\n\n/* :hover — khi rê chuột vào */\n.menu li:hover {\n  background: #6c5ce7;\n  color: white;\n  transform: translateX(5px);\n}\n\n/* :nth-child(even) — chọn hàng chẵn (2, 4, 6...) */\n.menu li:nth-child(even) {\n  background: #f1f2f6;\n}\n\n/* :first-child — chọn phần tử đầu tiên */\n.menu li:first-child {\n  font-weight: bold;\n}\n\n/* :last-child — chọn phần tử cuối cùng */\n.menu li:last-child {\n  border-bottom: 2px solid #6c5ce7;\n}",
+          "notes": ":nth-child() nhận công thức: (2n) = chẵn, (2n+1) = lẻ, (3n) = mỗi 3 phần tử. Ví dụ: :nth-child(3n+1) chọn phần tử 1, 4, 7, 10..."
+        },
+        {
+          "id": "pseudo-element",
+          "title": "Pseudo-element (::before, ::after)",
+          "explanation": "Pseudo-element tạo ra phần tử ẢO (không tồn tại trong HTML) để chèn nội dung trang trí trước (::before) hoặc sau (::after) nội dung thật. Bắt buộc phải có thuộc tính 'content'. Rất hay dùng để tạo icon, badge, đường kẻ trang trí mà không thêm HTML thừa.",
+          "html": "<h3 class=\"fancy-title\">Tiêu Đề Với Pseudo-element</h3>\n<p class=\"required-label\">Họ và tên</p>\n<a href=\"#\" class=\"external-link\">Tài liệu tham khảo</a>",
+          "css": "/* Thêm đường gạch trang trí trước tiêu đề */\n.fancy-title::before {\n  content: '';\n  display: inline-block;\n  width: 4px;\n  height: 20px;\n  background: #6c5ce7;\n  border-radius: 2px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n/* Thêm dấu * đỏ sau label bắt buộc */\n.required-label::after {\n  content: ' *';\n  color: #e74c3c;\n  font-weight: bold;\n}\n\n/* Thêm icon mũi tên sau link ngoài */\n.external-link::after {\n  content: ' →';\n  font-size: 0.9em;\n}",
+          "notes": "Pseudo-element dùng dấu :: (hai dấu hai chấm) để phân biệt với pseudo-class (:). Chúng không thể chọn bằng JavaScript vì không tồn tại trong DOM thật."
+        },
+        {
+          "id": "combinator-selectors",
+          "title": "Combinators (>, +, ~, khoảng trắng)",
+          "explanation": "Combinators kết hợp nhiều selector để nhắm phần tử theo MỐI QUAN HỆ trong DOM tree. Có 4 loại: (khoảng trắng) = con cháu bất kỳ, (>) = con trực tiếp, (+) = anh em liền kề, (~) = anh em chung cha.",
+          "html": "<div class=\"parent\">\n  <p>Con trực tiếp của .parent</p>\n  <div>\n    <p>Cháu của .parent (con của div)</p>\n  </div>\n</div>\n<h3>Tiêu đề</h3>\n<p>Đoạn văn NGAY SAU h3 (anh em liền kề)</p>\n<p>Đoạn văn thứ 2 sau h3</p>",
+          "css": "/* Khoảng trắng: chọn TẤT CẢ con cháu <p> */\n.parent p {\n  padding: 6px 10px;\n  margin: 4px 0;\n  background: #dfe6e9;\n  border-radius: 4px;\n}\n\n/* > : chỉ chọn con TRỰC TIẾP */\n.parent > p {\n  border-left: 3px solid #e74c3c;\n  font-weight: bold;\n}\n\n/* + : chọn phần tử NGAY SAU (adjacent sibling) */\nh3 + p {\n  color: #6c5ce7;\n  font-style: italic;\n}\n\n/* ~ : chọn TẤT CẢ anh em phía sau */\nh3 ~ p {\n  margin-left: 10px;\n}",
+          "notes": "Combinators là chìa khóa để viết CSS gọn mà không cần thêm class HTML. Dùng > thay vì khoảng trắng khi bạn chỉ muốn nhắm con trực tiếp để tránh ảnh hưởng phần tử lồng sâu."
+        }
+      ]
+    },
+    {
+      "id": "box-model",
+      "title": "2. Box Model",
+      "description": "Mọi phần tử HTML đều là một chiếc 'hộp' gồm 4 lớp từ trong ra ngoài: Content → Padding → Border → Margin. Hiểu Box Model là hiểu cách CSS tính kích thước và khoảng cách — đây là kiến thức nền tảng quyết định bạn có layout chính xác hay không.",
+      "examples": [
+        {
+          "id": "box-model-demo",
+          "title": "4 Thành Phần Của Box Model",
+          "explanation": "Content là vùng chứa nội dung (text, ảnh). Padding là đệm bên trong giữa content và border (giống đệm mút trong hộp quà). Border là viền bao quanh. Margin là khoảng cách bên ngoài giữa hộp này với hộp khác (giống khoảng trống giữa 2 hộp quà trên kệ).",
+          "html": "<div class=\"box-demo\">Nội dung (Content)</div>\n<div class=\"box-label\">← 20px margin → ← 4px border → ← 20px padding → Content</div>",
+          "css": ".box-demo {\n  width: 220px;\n  padding: 20px;       /* Đệm bên trong */\n  border: 4px solid #6c5ce7; /* Viền */\n  margin: 20px;        /* Khoảng cách ngoài */\n  background: #a29bfe;\n  color: white;\n  text-align: center;\n  font-weight: bold;\n  border-radius: 8px;\n}\n\n.box-label {\n  font-size: 12px;\n  color: #636e72;\n  margin-top: 8px;\n}",
+          "notes": "Kích thước thật của phần tử = width + padding-left + padding-right + border-left + border-right. Ví dụ: width 220px + padding 40px + border 8px = 268px thật sự chiếm trên màn hình!"
+        },
+        {
+          "id": "box-sizing",
+          "title": "box-sizing: border-box (Cực Quan Trọng!)",
+          "explanation": "Mặc định CSS dùng content-box: width chỉ tính cho content, padding + border cộng thêm ra ngoài → khó tính toán. border-box giải quyết vấn đề: width bao gồm CẢ padding + border, giúp phần tử luôn đúng kích thước bạn khai báo. Đây là lý do 99% dự án đều có `* { box-sizing: border-box; }` ở đầu file CSS.",
+          "html": "<div class=\"box-compare\">\n  <div class=\"box content-box\">content-box: width 200px nhưng thực tế rộng 248px!</div>\n  <div class=\"box border-box\">border-box: width 200px và LUÔN rộng đúng 200px!</div>\n</div>",
+          "css": ".box-compare {\n  display: flex;\n  gap: 12px;\n  flex-wrap: wrap;\n}\n\n.box {\n  width: 200px;\n  padding: 20px;\n  border: 4px solid #2ecc71;\n  background: #e8f8f5;\n  color: #2d3436;\n  font-size: 12px;\n  border-radius: 6px;\n}\n\n.content-box {\n  box-sizing: content-box;\n  border-color: #e74c3c;\n  background: #fff5f5;\n  color: #2d3436;\n}\n\n/* Hiện đại: width = content + padding + border */\n.border-box {\n  box-sizing: border-box;\n  border-color: #2ecc71;\n}",
+          "notes": "💡 Mẹo thực tế: LUÔN đặt `*, *::before, *::after { box-sizing: border-box; }` ở đầu mọi dự án. Đây là best practice được dùng bởi mọi framework CSS hiện đại."
+        },
+        {
+          "id": "margin-collapse",
+          "title": "Margin Collapse (Hiện Tượng Sáp Nhập Margin)",
+          "explanation": "Khi 2 phần tử block xếp dọc, margin-bottom của phần tử trên và margin-top của phần tử dưới KHÔNG cộng lại mà SÁP NHẬP thành 1 margin duy nhất (lấy giá trị lớn hơn). Đây là hành vi đặc biệt của CSS thường gây bối rối cho người mới.",
+          "html": "<div class=\"block-a\">Block A (margin-bottom: 30px)</div>\n<div class=\"block-b\">Block B (margin-top: 20px)</div>\n<p class=\"result\">→ Khoảng cách thật giữa A và B chỉ là 30px (giá trị lớn hơn), KHÔNG phải 50px!</p>",
+          "css": ".block-a {\n  background: #74b9ff;\n  padding: 15px;\n  margin-bottom: 30px; /* Margin dưới */\n  color: white;\n  border-radius: 6px;\n}\n\n.block-b {\n  background: #ff7675;\n  padding: 15px;\n  margin-top: 20px; /* Margin trên — sẽ bị sáp nhập! */\n  color: white;\n  border-radius: 6px;\n}\n\n.result {\n  font-size: 13px;\n  color: #636e72;\n  font-style: italic;\n  margin-top: 12px;\n}",
+          "notes": "Cách tránh margin collapse: dùng padding thay margin, dùng flexbox/grid (flex items không có margin collapse), hoặc thêm border/padding cho container cha."
+        }
+      ]
+    },
+    {
+      "id": "typography",
+      "title": "3. Xử Lý Văn Bản (Typography)",
+      "description": "Typography quyết định 50% trải nghiệm đọc của người dùng. Chọn đúng font, cỡ chữ, khoảng cách dòng và căn lề giúp nội dung dễ đọc, chuyên nghiệp. Trong thực tế, nhiều designer dành phần lớn thời gian chỉ để tinh chỉnh typography.",
+      "examples": [
+        {
+          "id": "font-properties",
+          "title": "Font Family, Size, Weight & Line-height",
+          "explanation": "font-family đặt phông chữ (luôn khai báo fallback font). font-size đặt cỡ chữ. font-weight đặt độ đậm (400=normal, 700=bold). line-height đặt chiều cao dòng — giá trị 1.5-1.8 giúp văn bản thoáng, dễ đọc.",
+          "html": "<h2 class=\"heading\">Tiêu Đề Nổi Bật</h2>\n<p class=\"body-text\">Đây là đoạn văn mẫu với font chữ dễ đọc. Khoảng cách dòng 1.7 giúp mắt di chuyển tự nhiên giữa các dòng mà không bị mỏi. Trong thực tế, line-height luôn lớn hơn 1.4 cho nội dung dài.</p>\n<small class=\"caption\">Caption text — cỡ nhỏ, màu nhạt</small>",
+          "css": ".heading {\n  font-family: 'Segoe UI', system-ui, sans-serif;\n  font-size: 26px;\n  font-weight: 700;\n  color: #2c3e50;\n  letter-spacing: -0.5px; /* Thu hẹp khoảng cách chữ cho heading */\n  margin-bottom: 12px;\n}\n\n.body-text {\n  font-size: 15px;\n  font-weight: 400;\n  line-height: 1.7; /* Chiều cao dòng = 1.7 × font-size */\n  color: #555;\n  margin-bottom: 12px;\n}\n\n.caption {\n  font-size: 12px;\n  color: #999;\n  font-style: italic;\n}",
+          "notes": "💡 Best practice: Heading dùng line-height 1.2-1.3, body text dùng 1.5-1.8. Luôn khai báo fallback font: font-family: 'Inter', system-ui, -apple-system, sans-serif;"
+        },
+        {
+          "id": "text-transform-decoration",
+          "title": "Text Transform, Decoration & Overflow",
+          "explanation": "text-transform biến đổi chữ (uppercase/lowercase/capitalize). text-decoration thêm gạch chân/gạch ngang. text-overflow: ellipsis cắt text dài thành '...' — kỹ thuật CỰC KỲ HAY DÙNG trong dự án thực tế để hiển thị tiêu đề trong không gian giới hạn.",
+          "html": "<p class=\"uppercase\">chữ thường → IN HOA</p>\n<p class=\"capitalize\">hello world → Hello World</p>\n<p class=\"line-through\">Giá cũ: 500.000đ</p>\n<div class=\"truncate\">Đây là một đoạn văn rất dài sẽ bị cắt bớt bằng dấu ba chấm (...) khi vượt quá chiều rộng khung chứa — rất hay dùng cho tiêu đề bài viết trong card</div>",
+          "css": ".uppercase {\n  text-transform: uppercase;\n  letter-spacing: 2px;\n  font-weight: bold;\n  color: #6c5ce7;\n}\n\n.capitalize {\n  text-transform: capitalize;\n  color: #2ecc71;\n}\n\n.line-through {\n  text-decoration: line-through;\n  color: #e74c3c;\n}\n\n/* ⭐ Kỹ thuật truncate text — dùng RẤT NHIỀU */\n.truncate {\n  white-space: nowrap;      /* Không xuống dòng */\n  overflow: hidden;         /* Ẩn phần tràn */\n  text-overflow: ellipsis;  /* Thêm dấu ... */\n  max-width: 300px;\n  background: #f0f0f0;\n  padding: 8px 12px;\n  border-radius: 6px;\n}",
+          "notes": "Combo truncate (3 dòng: white-space + overflow + text-overflow) là một trong những kỹ thuật CSS phổ biến nhất trong dự án thực tế, đặc biệt cho card titles và sidebar items."
+        }
+      ]
+    },
+    {
+      "id": "colors-backgrounds",
+      "title": "4. Màu Sắc & Nền (Colors & Backgrounds)",
+      "description": "CSS hỗ trợ nhiều cách khai báo màu: tên màu (red, blue), hex (#ff0000), RGB, HSL, và cả gradient. Background không chỉ là màu đơn — bạn có thể dùng gradient, ảnh, pattern, và nhiều lớp background xếp chồng lên nhau.",
+      "examples": [
+        {
+          "id": "color-formats",
+          "title": "Các Cách Khai Báo Màu Sắc",
+          "explanation": "Hex (#rrggbb) là phổ biến nhất. RGB/RGBA cho phép điều chỉnh độ trong suốt alpha. HSL (Hue-Saturation-Lightness) trực quan hơn khi cần tạo palette màu — chỉ cần thay đổi Hue để có màu mới với cùng độ sáng/đậm.",
+          "html": "<div class=\"color-hex\">Hex: #6c5ce7</div>\n<div class=\"color-rgba\">RGBA: rgba(108, 92, 231, 0.7)</div>\n<div class=\"color-hsl\">HSL: hsl(250, 72%, 63%)</div>",
+          "css": ".color-hex {\n  background: #6c5ce7;\n  color: white;\n  padding: 12px;\n  border-radius: 6px;\n  margin-bottom: 8px;\n}\n\n/* RGBA — 4 giá trị: Red, Green, Blue, Alpha (độ trong suốt) */\n.color-rgba {\n  background: rgba(108, 92, 231, 0.7); /* 0.7 = 70% đậm */\n  color: white;\n  padding: 12px;\n  border-radius: 6px;\n  margin-bottom: 8px;\n}\n\n/* HSL — trực quan: H=250 (hue), S=72% (saturation), L=63% (lightness) */\n.color-hsl {\n  background: hsl(250, 72%, 63%);\n  color: white;\n  padding: 12px;\n  border-radius: 6px;\n}",
+          "notes": "💡 Mẹo pro: Dùng HSL để tạo Dark Mode — chỉ cần giảm Lightness! Ví dụ: hsl(250, 72%, 63%) → hsl(250, 72%, 25%) là đã có bản tối."
+        },
+        {
+          "id": "gradients",
+          "title": "Gradient (Dải Màu Chuyển Tiếp)",
+          "explanation": "Linear gradient tạo dải màu theo một hướng (góc). Radial gradient tạo dải màu từ tâm tỏa ra. Gradient giúp giao diện trông hiện đại và sống động hơn nhiều so với màu đơn. Hầu hết các nút CTA (Call-to-Action) trong dự án thực tế đều dùng gradient.",
+          "html": "<div class=\"grad-card linear\">Linear Gradient (chéo 135°)</div>\n<div class=\"grad-card radial\">Radial Gradient (từ tâm tỏa ra)</div>\n<button class=\"grad-btn\">Nút CTA Gradient</button>",
+          "css": ".grad-card {\n  height: 70px;\n  margin-bottom: 10px;\n  border-radius: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: white;\n  font-weight: bold;\n}\n\n.linear {\n  background: linear-gradient(135deg, #6c5ce7, #fd79a8);\n}\n\n.radial {\n  background: radial-gradient(circle at 30% 50%, #00b894, #00cec9);\n}\n\n.grad-btn {\n  background: linear-gradient(90deg, #6c5ce7, #a29bfe);\n  color: white;\n  border: none;\n  padding: 12px 28px;\n  border-radius: 25px;\n  font-weight: bold;\n  font-size: 14px;\n  cursor: pointer;\n}",
+          "notes": "Gradient có thể chồng nhiều lớp: background: linear-gradient(...), linear-gradient(...); Các công cụ tạo gradient online: cssgradient.io, uigradients.com."
+        }
+      ]
+    },
+    {
+      "id": "display-visibility",
+      "title": "5. Display & Visibility",
+      "description": "Thuộc tính display quyết định CÁCH phần tử chiếm không gian: block (chiếm cả dòng), inline (vừa nội dung, nằm cùng dòng), inline-block (nằm cùng dòng nhưng điều chỉnh được kích thước). Hiểu sự khác biệt giúp bạn tránh thắc mắc 'tại sao width/height không hoạt động?'",
+      "examples": [
+        {
+          "id": "display-types",
+          "title": "Block vs Inline vs Inline-Block",
+          "explanation": "Block: phần tử chiếm trọn 1 dòng (div, p, h1...). Inline: chỉ vừa nội dung, không nhận width/height/margin trên-dưới (span, a, strong...). Inline-block: kết hợp cả hai — nằm cùng dòng nhưng CÓ THỂ đặt width/height. Đây là câu hỏi phỏng vấn CSS phổ biến!",
+          "html": "<span class=\"demo inline\">Inline — chỉ vừa text</span>\n<span class=\"demo inline\">Inline 2 — cùng dòng</span>\n<div class=\"demo block\">Block — chiếm cả dòng dù text ngắn</div>\n<span class=\"demo inline-block\">Inline-Block — cùng dòng + có width</span>\n<span class=\"demo inline-block\">Inline-Block 2</span>",
+          "css": ".demo {\n  background: #ffeaa7;\n  padding: 8px 12px;\n  margin: 4px;\n  border: 1px solid #fdcb6e;\n}\n\n.inline {\n  display: inline;\n  /* width, height, margin-top/bottom sẽ KHÔNG hoạt động! */\n}\n\n.block {\n  display: block;\n  background: #74b9ff;\n  color: white;\n}\n\n.inline-block {\n  display: inline-block;\n  width: 200px; /* Hoạt động! */\n  background: #55efc4;\n  text-align: center;\n}",
+          "notes": "Quy tắc nhớ: Inline = chữ viết (chảy theo dòng), Block = khối gạch (xếp chồng), Inline-block = khối gạch nhỏ (xếp cạnh nhau). Nếu width/height không work → kiểm tra display!"
+        },
+        {
+          "id": "display-none-vs-visibility",
+          "title": "display: none vs visibility: hidden",
+          "explanation": "display: none — phần tử BIẾN MẤT hoàn toàn, KHÔNG chiếm không gian (như chưa tồn tại). visibility: hidden — phần tử VÔ HÌNH nhưng VẪN chiếm không gian (để lại khoảng trống). Sự khác biệt này ảnh hưởng đến layout của các phần tử xung quanh.",
+          "html": "<div class=\"flex-row\">\n  <div class=\"item\">Phần tử 1</div>\n  <div class=\"item gone\">display: none (biến mất)</div>\n  <div class=\"item\">Phần tử 3</div>\n</div>\n<br>\n<div class=\"flex-row\">\n  <div class=\"item\">Phần tử 1</div>\n  <div class=\"item invisible\">visibility: hidden (vô hình)</div>\n  <div class=\"item\">Phần tử 3</div>\n</div>",
+          "css": ".flex-row {\n  display: flex;\n  gap: 8px;\n}\n\n.item {\n  background: #6c5ce7;\n  color: white;\n  padding: 12px 16px;\n  border-radius: 6px;\n  font-size: 13px;\n}\n\n/* Biến mất + không chiếm chỗ */\n.gone {\n  display: none;\n}\n\n/* Vô hình nhưng VẪN chiếm chỗ */\n.invisible {\n  visibility: hidden;\n}",
+          "notes": "Dùng display:none khi cần ẩn hoàn toàn (toggle menu, tabs). Dùng visibility:hidden khi cần giữ layout ổn định (ẩn tooltip nhưng giữ vị trí). Ngoài ra còn opacity:0 — vô hình nhưng vẫn nhận click/hover."
+        }
+      ]
+    },
+    {
+      "id": "positioning",
+      "title": "6. Vị Trí Phần Tử (Positioning)",
+      "description": "Positioning cho phép bạn đặt phần tử ở vị trí chính xác trên trang, bất chấp luồng bình thường (normal flow). Có 5 giá trị: static (mặc định), relative (dời so với vị trí gốc), absolute (dời so với container cha), fixed (dính viewport), sticky (hybrid).",
+      "examples": [
+        {
+          "id": "relative-absolute",
+          "title": "Relative + Absolute (Combo Kinh Điển)",
+          "explanation": "Đây là combo dùng NHIỀU NHẤT: đặt cha là relative (làm 'mốc tọa độ'), con là absolute (tự do di chuyển trong cha bằng top/right/bottom/left). Thường dùng để đặt badge, icon, overlay, nút đóng X trên card/ảnh.",
+          "html": "<div class=\"card-wrapper\">\n  <div class=\"card-content\">Sản phẩm mới</div>\n  <span class=\"badge-new\">NEW</span>\n  <button class=\"close-btn\">✕</button>\n</div>",
+          "css": "/* Cha: relative (tạo mốc tọa độ) */\n.card-wrapper {\n  position: relative; /* ⭐ Bắt buộc để con absolute hoạt động */\n  width: 250px;\n  padding: 20px;\n  background: #f8f9fa;\n  border: 2px solid #dfe6e9;\n  border-radius: 10px;\n}\n\n.card-content {\n  font-size: 16px;\n  font-weight: bold;\n}\n\n/* Con: absolute (tự do bay trong cha) */\n.badge-new {\n  position: absolute;\n  top: -8px;    /* Lên trên viền cha */\n  left: 12px;\n  background: #ff4757;\n  color: white;\n  padding: 2px 10px;\n  border-radius: 10px;\n  font-size: 11px;\n  font-weight: bold;\n}\n\n.close-btn {\n  position: absolute;\n  top: 8px;\n  right: 8px;   /* Góc trên phải */\n  background: transparent;\n  border: none;\n  font-size: 16px;\n  cursor: pointer;\n  color: #999;\n}",
+          "notes": "⚠️ Nếu cha KHÔNG có position: relative, phần tử absolute sẽ bay lên tìm ông/bà/... có position, hoặc cuối cùng là viewport. Đây là lỗi phổ biến nhất khi dùng absolute!"
+        },
+        {
+          "id": "fixed-sticky",
+          "title": "Fixed & Sticky (Dính Viewport)",
+          "explanation": "Fixed: phần tử cố định trên viewport, KHÔNG di chuyển khi cuộn — dùng cho header, nút back-to-top, chat widget. Sticky: kết hợp relative + fixed — cuộn bình thường cho đến khi chạm ngưỡng (top: 0) thì 'dính' lại. Dùng cho sticky header, sticky sidebar.",
+          "html": "<div class=\"scroll-demo\">\n  <div class=\"sticky-nav\">📌 Sticky Nav (dính khi cuộn)</div>\n  <p>Nội dung 1 — Cuộn xuống để xem hiệu ứng sticky!</p>\n  <p>Nội dung 2</p>\n  <p>Nội dung 3</p>\n  <p>Nội dung 4</p>\n  <p>Nội dung 5</p>\n  <p>Nội dung 6</p>\n</div>",
+          "css": ".scroll-demo {\n  height: 160px;\n  overflow-y: auto;\n  border: 2px solid #dfe6e9;\n  border-radius: 8px;\n}\n\n/* Sticky: cuộn bình thường → dính khi top = 0 */\n.sticky-nav {\n  position: sticky;\n  top: 0;\n  background: #2d3436;\n  color: white;\n  padding: 10px 16px;\n  font-weight: bold;\n  z-index: 10; /* Đảm bảo nằm trên nội dung */\n}\n\n.scroll-demo p {\n  padding: 15px;\n  border-bottom: 1px solid #f1f2f6;\n  margin: 0;\n}",
+          "notes": "Sticky KHÔNG hoạt động nếu: cha có overflow: hidden, hoặc không có đủ content để cuộn. Fixed không tham gia luồng bình thường nên cần đặt width cụ thể và padding-top cho content phía dưới."
+        }
+      ]
+    },
+    {
+      "id": "flexbox",
+      "title": "7. Flexbox Layout",
+      "description": "Flexbox là hệ thống dàn trang 1 chiều (theo hàng HOẶC cột) mạnh mẽ nhất CSS. Trước Flexbox, việc căn giữa một phần tử theo cả chiều ngang lẫn dọc là cực kỳ khó. Với Flexbox chỉ cần 3 dòng CSS. Đây là kỹ năng BẮT BUỘC cho mọi Front-end Developer.",
+      "examples": [
+        {
+          "id": "flex-center",
+          "title": "Căn Giữa Hoàn Hảo (3 Dòng CSS)",
+          "explanation": "display: flex biến container thành flex container. justify-content: center căn giữa theo TRỤC CHÍNH (mặc định: ngang). align-items: center căn giữa theo TRỤC PHỤ (mặc định: dọc). Đây là 3 dòng CSS mà bạn sẽ viết hàng ngày!",
+          "html": "<div class=\"center-box\">\n  <div class=\"center-item\">✨ Căn Giữa Hoàn Hảo</div>\n</div>",
+          "css": "/* Chỉ cần 3 dòng để căn giữa! */\n.center-box {\n  display: flex;\n  justify-content: center;  /* Căn giữa ngang */\n  align-items: center;      /* Căn giữa dọc */\n  \n  height: 150px;\n  background: #2d3436;\n  border-radius: 10px;\n}\n\n.center-item {\n  background: linear-gradient(135deg, #6c5ce7, #a29bfe);\n  color: white;\n  padding: 14px 28px;\n  border-radius: 8px;\n  font-weight: bold;\n  font-size: 15px;\n}",
+          "notes": "Mẹo nhớ: justify = trục chính (J = Justify, hướng Main axis), align = trục phụ (A = Align, hướng Cross axis). Khi flex-direction: column, trục chính đổi thành dọc nên justify-content căn dọc!"
+        },
+        {
+          "id": "flex-space-between",
+          "title": "space-between, space-around, space-evenly",
+          "explanation": "3 cách phân bố khoảng cách: space-between — phần tử đầu và cuối dính sát viền, khoảng giữa chia đều. space-around — mỗi phần tử có khoảng cách 2 bên bằng nhau. space-evenly — mọi khoảng cách (kể cả viền) bằng nhau. Trong thực tế, space-between được dùng nhiều nhất (cho navbar, footer links).",
+          "html": "<p style=\"font-size:12px;color:#999;\">space-between:</p>\n<div class=\"flex-row between\">\n  <div class=\"item\">Logo</div>\n  <div class=\"item\">Menu</div>\n  <div class=\"item\">Login</div>\n</div>\n<p style=\"font-size:12px;color:#999;margin-top:12px;\">space-evenly:</p>\n<div class=\"flex-row evenly\">\n  <div class=\"item\">A</div>\n  <div class=\"item\">B</div>\n  <div class=\"item\">C</div>\n</div>",
+          "css": ".flex-row {\n  display: flex;\n  align-items: center;\n  padding: 10px;\n  background: #f1f2f6;\n  border-radius: 8px;\n  margin-bottom: 4px;\n}\n\n.between { justify-content: space-between; }\n.evenly { justify-content: space-evenly; }\n\n.item {\n  background: #6c5ce7;\n  color: white;\n  padding: 8px 16px;\n  border-radius: 6px;\n  font-weight: bold;\n  font-size: 13px;\n}",
+          "notes": "Combo kinh điển cho Navbar: display:flex + justify-content:space-between + align-items:center. Bạn sẽ dùng pattern này trong hầu hết mọi project."
+        },
+        {
+          "id": "flex-wrap-grow",
+          "title": "Flex Wrap & Flex Grow/Shrink/Basis",
+          "explanation": "flex-wrap: wrap cho phép items xuống dòng khi hết chỗ (mặc định nowrap = ép nén). flex-grow quyết định tỷ lệ phần tử được GIÃN ra chiếm không gian thừa. flex-shrink quyết định tỷ lệ CO LẠI khi thiếu chỗ. flex-basis là kích thước ban đầu (thay thế width trong flex).",
+          "html": "<div class=\"flex-wrap-demo\">\n  <div class=\"flex-card\" style=\"flex: 2\">flex: 2 (chiếm gấp đôi)</div>\n  <div class=\"flex-card\" style=\"flex: 1\">flex: 1</div>\n  <div class=\"flex-card\" style=\"flex: 1\">flex: 1</div>\n</div>",
+          "css": ".flex-wrap-demo {\n  display: flex;\n  flex-wrap: wrap; /* Cho phép xuống dòng */\n  gap: 10px;\n}\n\n.flex-card {\n  /* flex: grow shrink basis */\n  /* flex: 1 = flex: 1 1 0% (giãn đều, co đều, basis 0) */\n  min-width: 100px;\n  background: #00b894;\n  color: white;\n  padding: 16px;\n  border-radius: 8px;\n  text-align: center;\n  font-weight: bold;\n  font-size: 13px;\n}",
+          "notes": "Shorthand 'flex: 1' = flex-grow:1, flex-shrink:1, flex-basis:0%. Đây là cách nhanh nhất để chia đều không gian. flex: 2 chiếm gấp đôi flex: 1."
+        }
+      ]
+    },
+    {
+      "id": "css-grid",
+      "title": "8. CSS Grid Layout",
+      "description": "CSS Grid là hệ thống dàn trang 2 CHIỀU (hàng VÀ cột cùng lúc), mạnh hơn Flexbox cho layout phức tạp. Dùng Grid cho layout tổng thể của trang (header/sidebar/content/footer), dùng Flexbox cho alignment trong component nhỏ. Hai công cụ bổ sung cho nhau, không thay thế.",
+      "examples": [
+        {
+          "id": "grid-basic",
+          "title": "Grid Template Columns & Rows",
+          "explanation": "grid-template-columns định nghĩa số cột và kích thước. Đơn vị fr (fraction = phần) chia tỷ lệ linh hoạt giống flex-grow. repeat(3, 1fr) = tạo 3 cột bằng nhau. gap đặt khoảng cách giữa các ô.",
+          "html": "<div class=\"grid-demo\">\n  <div class=\"g-item\">1</div>\n  <div class=\"g-item\">2</div>\n  <div class=\"g-item\">3</div>\n  <div class=\"g-item\">4</div>\n  <div class=\"g-item\">5</div>\n  <div class=\"g-item\">6</div>\n</div>",
+          "css": ".grid-demo {\n  display: grid;\n  /* 3 cột bằng nhau, mỗi cột chiếm 1 phần (fr) */\n  grid-template-columns: repeat(3, 1fr);\n  gap: 10px; /* Khoảng cách giữa các ô */\n}\n\n.g-item {\n  background: #1e90ff;\n  color: white;\n  padding: 24px;\n  text-align: center;\n  font-weight: bold;\n  font-size: 18px;\n  border-radius: 8px;\n}",
+          "notes": "Đơn vị fr chỉ chia KHÔNG GIAN CÒN LẠI. Ví dụ: grid-template-columns: 200px 1fr 1fr → cột 1 luôn 200px, 2 cột còn lại chia đều phần còn lại."
+        },
+        {
+          "id": "grid-autofit",
+          "title": "Grid Auto-fit + Minmax (Responsive Không Cần Media Query!)",
+          "explanation": "Đây là 'công thức vàng' của CSS Grid: repeat(auto-fit, minmax(min, 1fr)). auto-fit tự động tính số cột vừa khung. minmax(200px, 1fr) đảm bảo mỗi cột tối thiểu 200px, tối đa 1fr. Kết quả: grid TỰ ĐỘNG responsive mà KHÔNG cần viết bất kỳ @media query nào!",
+          "html": "<div class=\"auto-grid\">\n  <div class=\"a-card\">Card 1</div>\n  <div class=\"a-card\">Card 2</div>\n  <div class=\"a-card\">Card 3</div>\n  <div class=\"a-card\">Card 4</div>\n  <div class=\"a-card\">Card 5</div>\n</div>",
+          "css": "/* ⭐ Công thức vàng — responsive grid không cần media query */\n.auto-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));\n  gap: 12px;\n}\n\n.a-card {\n  background: linear-gradient(135deg, #fd79a8, #e84393);\n  color: white;\n  padding: 20px;\n  text-align: center;\n  border-radius: 10px;\n  font-weight: bold;\n}",
+          "notes": "auto-fit vs auto-fill: auto-fit co lại cột trống, auto-fill giữ nguyên cột trống. Trong 95% trường hợp, dùng auto-fit. Công thức này là MUST-KNOW cho mọi developer!"
+        },
+        {
+          "id": "grid-area",
+          "title": "Grid Area — Dàn Trang Toàn Bộ Website",
+          "explanation": "grid-template-areas cho phép bạn 'vẽ' layout bằng text — cực kỳ trực quan! Đặt tên cho từng vùng (header, sidebar, main, footer) rồi gán phần tử vào vùng đó. Đây là cách tốt nhất để xây dựng layout tổng thể cho website.",
+          "html": "<div class=\"page-layout\">\n  <header class=\"pg-header\">Header</header>\n  <aside class=\"pg-sidebar\">Sidebar</aside>\n  <main class=\"pg-main\">Main Content</main>\n  <footer class=\"pg-footer\">Footer</footer>\n</div>",
+          "css": "/* Dàn trang website bằng Grid Areas */\n.page-layout {\n  display: grid;\n  grid-template-areas:\n    \"header  header\"\n    \"sidebar main\"\n    \"footer  footer\";\n  grid-template-columns: 180px 1fr;\n  grid-template-rows: 50px 1fr 40px;\n  gap: 8px;\n  height: 250px;\n}\n\n.pg-header  { grid-area: header;  background: #2d3436; color: white; }\n.pg-sidebar { grid-area: sidebar; background: #636e72; color: white; }\n.pg-main    { grid-area: main;    background: #dfe6e9; }\n.pg-footer  { grid-area: footer;  background: #2d3436; color: white; }\n\n.page-layout > * {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 6px;\n  font-weight: bold;\n  font-size: 13px;\n}",
+          "notes": "Trong grid-template-areas, mỗi dòng string là 1 hàng, mỗi từ là 1 cột. Dùng dấu chấm (.) cho ô trống. Đây là phương pháp layout được W3C khuyến nghị cho page structure."
+        }
+      ]
+    },
+    {
+      "id": "float-clear",
+      "title": "9. Float & Clear (Kỹ Thuật Cũ)",
+      "description": "Float từng là cách DUY NHẤT để tạo layout nhiều cột trước khi có Flexbox/Grid. Ngày nay hiếm khi dùng cho layout nhưng vẫn cần biết để: (1) bảo trì code cũ, (2) wrap text quanh hình ảnh — đây là công dụng gốc và duy nhất nên dùng của float.",
+      "examples": [
+        {
+          "id": "float-text-wrap",
+          "title": "Float — Chữ Bao Quanh Hình Ảnh",
+          "explanation": "Công dụng gốc của float: đẩy phần tử sang trái/phải và cho phép text bao quanh — giống layout báo chí, tạp chí. Đây là trường hợp DUY NHẤT bạn nên dùng float trong dự án hiện đại.",
+          "html": "<div class=\"article\">\n  <div class=\"float-img\">📸 Ảnh</div>\n  <p>Đây là đoạn văn bản sẽ tự động bao quanh hình ảnh được float sang trái. Giống như cách báo chí trình bày ảnh trong bài viết — text chảy tự nhiên quanh hình ảnh mà không bị ngắt.</p>\n</div>",
+          "css": ".article {\n  padding: 12px;\n  background: #f8f9fa;\n  border-radius: 8px;\n  line-height: 1.7;\n}\n\n.float-img {\n  float: left;        /* Đẩy sang trái */\n  width: 90px;\n  height: 70px;\n  background: #6c5ce7;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 6px;\n  margin-right: 12px; /* Khoảng cách với text */\n  margin-bottom: 6px;\n  font-size: 14px;\n}",
+          "notes": "⚠️ KHÔNG dùng float để chia cột layout! Dùng Flexbox hoặc Grid thay thế. Float chỉ nên dùng cho text-wrapping (bao chữ quanh ảnh)."
+        }
+      ]
+    },
+    {
+      "id": "overflow",
+      "title": "10. Overflow (Xử Lý Nội Dung Tràn)",
+      "description": "Overflow kiểm soát điều gì xảy ra khi nội dung lớn hơn kích thước container. Có 4 giá trị: visible (tràn ra ngoài), hidden (cắt bỏ phần tràn), scroll (luôn hiện thanh cuộn), auto (chỉ hiện thanh cuộn khi cần). Rất quan trọng cho sidebar, modal, dropdown.",
+      "examples": [
+        {
+          "id": "overflow-values",
+          "title": "Visible vs Hidden vs Auto",
+          "explanation": "visible (mặc định): nội dung tràn ra ngoài container — có thể đè lên phần tử khác. hidden: cắt bỏ phần tràn — hay dùng cho avatar tròn, card ảnh. auto: chỉ xuất hiện scrollbar khi thật sự cần — dùng cho sidebar, modal content.",
+          "html": "<div class=\"overflow-row\">\n  <div class=\"box-overflow visible\">\n    <strong>visible</strong><br>Nội dung tràn ra ngoài khung chứa!\n  </div>\n  <div class=\"box-overflow hidden\">\n    <strong>hidden</strong><br>Nội dung bị cắt gọn khi tràn khung chứa!\n  </div>\n  <div class=\"box-overflow auto\">\n    <strong>auto</strong><br>Cuộn được khi nội dung tràn khung chứa!\n  </div>\n</div>",
+          "css": ".overflow-row {\n  display: flex;\n  gap: 12px;\n}\n\n.box-overflow {\n  width: 130px;\n  height: 80px;\n  background: #f0f0f0;\n  border: 2px solid #ddd;\n  border-radius: 6px;\n  padding: 8px;\n  font-size: 11px;\n}\n\n.visible { overflow: visible; border-color: #e74c3c; }\n.hidden  { overflow: hidden;  border-color: #f39c12; }\n.auto    { overflow: auto;    border-color: #2ecc71; }",
+          "notes": "overflow: hidden còn có tác dụng phụ quan trọng: tạo BFC (Block Formatting Context) giúp ngăn margin collapse và chứa float. Đây là lý do nhiều code cũ dùng overflow:hidden cho container."
+        }
+      ]
+    },
+    {
+      "id": "transitions",
+      "title": "11. Chuyển Động Mượt (Transitions)",
+      "description": "Transition tạo hiệu ứng chuyển đổi MƯỢT MÀ giữa 2 trạng thái CSS (ví dụ: từ màu xanh sang đỏ khi hover). Không cần JavaScript! Transition chỉ cần 2 thứ: (1) trạng thái bắt đầu + kết thúc, (2) thời gian chuyển đổi. Đây là công cụ tạo micro-interaction đơn giản nhất.",
+      "examples": [
+        {
+          "id": "hover-transition",
+          "title": "Nút Đổi Màu, Phóng To & Đổ Bóng",
+          "explanation": "Đặt transition trên trạng thái GỐC (không phải :hover). Khi hover xảy ra, CSS tự động animate từ trạng thái gốc sang trạng thái hover theo thời gian và easing bạn chỉ định.",
+          "html": "<button class=\"animated-btn\">✨ Rê Chuột Vào Tôi!</button>",
+          "css": "/* Trạng thái GỐC — đặt transition ở đây */\n.animated-btn {\n  background: #6c5ce7;\n  color: white;\n  padding: 14px 28px;\n  font-size: 15px;\n  border: none;\n  border-radius: 10px;\n  cursor: pointer;\n  /* transition: thuộc_tính thời_gian hàm_easing delay */\n  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);\n}\n\n/* Trạng thái HOVER — CSS tự animate đến đây */\n.animated-btn:hover {\n  background: #5f27cd;\n  transform: translateY(-3px) scale(1.05);\n  box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);\n}",
+          "notes": "Easing phổ biến: ease (mặc định), ease-in-out (mượt 2 đầu), cubic-bezier (tùy chỉnh). Trang cubic-bezier.com giúp tạo easing trực quan. Tránh transition: all cho production — chỉ transition thuộc tính cần thiết để tối ưu performance."
+        }
+      ]
+    },
+    {
+      "id": "animations",
+      "title": "12. Keyframe Animations",
+      "description": "Nếu Transition chỉ animate giữa 2 trạng thái, Animation (@keyframes) cho phép tạo chuỗi nhiều bước phức tạp, chạy liên tục, lặp lại, và kiểm soát chi tiết từng giai đoạn. Dùng cho loading spinner, pulse effect, slide-in, typing effect...",
+      "examples": [
+        {
+          "id": "pulse-animation",
+          "title": "Hiệu Ứng Pulse (Nhịp Đập) & Loading",
+          "explanation": "@keyframes định nghĩa các bước (0%, 50%, 100%). animation shorthand gán keyframe cho phần tử với: tên, thời gian, easing, delay, lượt lặp, hướng. 'infinite' = lặp vô tận.",
+          "html": "<div class=\"anim-row\">\n  <div class=\"pulse-live\">\n    <div class=\"pulse-dot\"></div>\n    <span>Đang phát trực tiếp</span>\n  </div>\n  <div class=\"loading-spinner\"></div>\n</div>",
+          "css": ".anim-row {\n  display: flex;\n  align-items: center;\n  gap: 30px;\n}\n\n/* === Hiệu ứng Pulse === */\n.pulse-live {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n\n.pulse-dot {\n  width: 12px;\n  height: 12px;\n  background: #ff4757;\n  border-radius: 50%;\n  animation: pulse 1.5s ease-in-out infinite;\n}\n\n@keyframes pulse {\n  0%, 100% {\n    transform: scale(0.9);\n    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.6);\n  }\n  50% {\n    transform: scale(1.1);\n    box-shadow: 0 0 0 8px rgba(255, 71, 87, 0);\n  }\n}\n\n/* === Loading Spinner === */\n.loading-spinner {\n  width: 28px;\n  height: 28px;\n  border: 3px solid #dfe6e9;\n  border-top: 3px solid #6c5ce7;\n  border-radius: 50%;\n  animation: spin 0.8s linear infinite;\n}\n\n@keyframes spin {\n  to { transform: rotate(360deg); }\n}",
+          "notes": "animation-fill-mode: forwards giữ trạng thái cuối cùng sau khi animation kết thúc. animation-delay: 0.5s trì hoãn 0.5s trước khi bắt đầu — hữu ích cho stagger effect (các phần tử animate lần lượt)."
+        }
+      ]
+    },
+    {
+      "id": "transform",
+      "title": "13. Biến Đổi Hình Học (Transform)",
+      "description": "Transform thay đổi hình dạng và vị trí phần tử mà KHÔNG ảnh hưởng layout xung quanh (không đẩy phần tử khác). Bao gồm: translate (dịch chuyển), rotate (xoay), scale (thu phóng), skew (nghiêng). Kết hợp với transition/animation để tạo hiệu ứng mượt mà.",
+      "examples": [
+        {
+          "id": "transform-functions",
+          "title": "Translate, Rotate, Scale & Skew",
+          "explanation": "translate(x, y) dịch chuyển. rotate(deg) xoay theo góc. scale(n) phóng to/thu nhỏ (1=gốc, 2=gấp đôi, 0.5=nửa). skew(deg) nghiêng. Có thể kết hợp nhiều transform: transform: translateY(-5px) scale(1.05) rotate(2deg);",
+          "html": "<div class=\"transform-grid\">\n  <div class=\"t-card translate\">Translate ↗</div>\n  <div class=\"t-card rotate\">Rotate 🔄</div>\n  <div class=\"t-card scale\">Scale 🔍</div>\n  <div class=\"t-card skew\">Skew ◇</div>\n</div>",
+          "css": ".transform-grid {\n  display: flex;\n  gap: 14px;\n  flex-wrap: wrap;\n  padding: 20px 0;\n}\n\n.t-card {\n  width: 100px;\n  height: 70px;\n  background: #6c5ce7;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 8px;\n  font-weight: bold;\n  font-size: 12px;\n  transition: transform 0.3s ease;\n}\n\n.translate:hover { transform: translate(10px, -10px); }\n.rotate:hover    { transform: rotate(15deg); }\n.scale:hover     { transform: scale(1.2); }\n.skew:hover      { transform: skewX(-10deg); }",
+          "notes": "transform: translateX(-50%) là kỹ thuật căn giữa kinh điển: position: absolute + left: 50% + transform: translateX(-50%) → căn giữa ngang chính xác. Transform GPU-accelerated nên mượt hơn thay đổi top/left."
+        }
+      ]
+    },
+    {
+      "id": "shadows",
+      "title": "14. Đổ Bóng (Box Shadow & Text Shadow)",
+      "description": "Shadow tạo chiều sâu 3D cho giao diện phẳng. Box-shadow cho container/card/button. Text-shadow cho chữ. Shadow nhiều lớp tạo hiệu ứng 'nổi' (elevation) giống Material Design — giúp người dùng phân biệt các lớp giao diện.",
+      "examples": [
+        {
+          "id": "shadow-layers",
+          "title": "Đổ Bóng Nhiều Lớp (Layered Shadows)",
+          "explanation": "Dùng nhiều box-shadow ngăn cách bằng dấu phẩy để tạo bóng mềm, tự nhiên hơn. Lớp 1 tạo bóng gần (nhỏ, đậm), lớp 2 tạo bóng xa (lớn, nhạt). Kết quả giống ánh sáng tự nhiên chiếu vào vật thể.",
+          "html": "<div class=\"shadow-cards\">\n  <div class=\"s-card small\">Bóng Nhẹ</div>\n  <div class=\"s-card medium\">Bóng Trung Bình</div>\n  <div class=\"s-card large\">Bóng Nổi (Hover)</div>\n</div>",
+          "css": ".shadow-cards {\n  display: flex;\n  gap: 16px;\n  flex-wrap: wrap;\n  padding: 20px 0;\n}\n\n.s-card {\n  width: 130px;\n  padding: 20px;\n  background: white;\n  border-radius: 12px;\n  text-align: center;\n  font-weight: bold;\n  font-size: 12px;\n  color: #555;\n  transition: box-shadow 0.3s ease, transform 0.3s ease;\n}\n\n/* Bóng nhẹ — card bình thường */\n.small {\n  box-shadow: 0 1px 3px rgba(0,0,0,0.08);\n}\n\n/* Bóng trung bình — card nổi bật */\n.medium {\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\n}\n\n/* Bóng lớn — hover state */\n.large {\n  box-shadow: 0 4px 12px rgba(0,0,0,0.1);\n}\n\n.large:hover {\n  box-shadow: 0 12px 28px rgba(0,0,0,0.15);\n  transform: translateY(-4px);\n}",
+          "notes": "Quy tắc bóng đẹp: blur-radius nên gấp 2-3x offset-y. Dùng rgba(0,0,0,0.08-0.15) cho bóng tự nhiên. Inset shadow (bóng vào trong) tạo hiệu ứng đè nút: box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);"
+        }
+      ]
+    },
+    {
+      "id": "borders",
+      "title": "15. Borders & Border-radius",
+      "description": "Border tạo viền cho phần tử với nhiều kiểu dáng (solid, dashed, dotted, double...). Border-radius bo tròn góc — từ bo nhẹ (4-8px cho nút) đến hình tròn hoàn hảo (50%). Ngoài ra outline khác border: outline KHÔNG chiếm không gian layout.",
+      "examples": [
+        {
+          "id": "border-styles",
+          "title": "Các Kiểu Border & Bo Tròn Góc",
+          "explanation": "border có 3 thành phần: width (độ dày), style (kiểu), color (màu). border-radius bo tròn góc — giá trị càng lớn càng tròn, 50% = hình tròn hoặc elip. Có thể bo riêng từng góc.",
+          "html": "<div class=\"border-grid\">\n  <div class=\"b-card solid\">Solid</div>\n  <div class=\"b-card dashed\">Dashed</div>\n  <div class=\"b-card round\">Tròn 50%</div>\n  <div class=\"b-card pill\">Bo Viên Thuốc</div>\n</div>",
+          "css": ".border-grid {\n  display: flex;\n  gap: 12px;\n  flex-wrap: wrap;\n  align-items: center;\n}\n\n.b-card {\n  padding: 14px 18px;\n  text-align: center;\n  font-weight: bold;\n  font-size: 12px;\n  background: white;\n}\n\n.solid {\n  border: 3px solid #6c5ce7;\n  border-radius: 8px;\n}\n\n.dashed {\n  border: 3px dashed #e74c3c;\n  border-radius: 8px;\n}\n\n/* Bo tròn hoàn hảo (cần width = height) */\n.round {\n  width: 70px;\n  height: 70px;\n  border-radius: 50%;\n  border: 3px solid #2ecc71;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n/* Bo kiểu viên thuốc (border-radius >= height/2) */\n.pill {\n  border: 2px solid #3498db;\n  border-radius: 50px; /* Giá trị lớn = viên thuốc */\n  padding: 10px 24px;\n}",
+          "notes": "Bo tròn từng góc: border-radius: 10px 0 10px 0 (trên-trái, trên-phải, dưới-phải, dưới-trái). Avatar tròn: width + height bằng nhau + border-radius: 50% + overflow: hidden."
+        }
+      ]
+    },
+    {
+      "id": "forms-styling",
+      "title": "16. Trang Trí Form (Forms Styling)",
+      "description": "Form là phần tương tác quan trọng nhất của website (login, đăng ký, tìm kiếm, thanh toán...). Mặc định, input/button/select của browser trông rất xấu. Tùy chỉnh form CSS giúp trải nghiệm người dùng tốt hơn nhiều. Đây là kỹ năng thực tế bắt buộc.",
+      "examples": [
+        {
+          "id": "custom-input",
+          "title": "Tùy Chỉnh Input & Button",
+          "explanation": "Reset appearance mặc định của browser, thêm padding, border, focus state với outline hoặc box-shadow. Focus state RẤT QUAN TRỌNG cho accessibility (người dùng tab qua form).",
+          "html": "<form class=\"styled-form\">\n  <label class=\"form-label\">Email</label>\n  <input type=\"email\" class=\"form-input\" placeholder=\"you@example.com\">\n  <label class=\"form-label\">Mật khẩu</label>\n  <input type=\"password\" class=\"form-input\" placeholder=\"Tối thiểu 8 ký tự\">\n  <button type=\"button\" class=\"form-btn\">Đăng Nhập</button>\n</form>",
+          "css": ".styled-form {\n  max-width: 300px;\n}\n\n.form-label {\n  display: block;\n  font-size: 13px;\n  font-weight: 600;\n  color: #333;\n  margin-bottom: 4px;\n}\n\n.form-input {\n  width: 100%;\n  padding: 10px 14px;\n  border: 2px solid #dfe6e9;\n  border-radius: 8px;\n  font-size: 14px;\n  margin-bottom: 12px;\n  transition: border-color 0.2s;\n}\n\n/* Focus state — CỰC KỲ QUAN TRỌNG cho UX */\n.form-input:focus {\n  border-color: #6c5ce7;\n  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);\n  outline: none;\n}\n\n.form-btn {\n  width: 100%;\n  padding: 12px;\n  background: #6c5ce7;\n  color: white;\n  border: none;\n  border-radius: 8px;\n  font-size: 15px;\n  font-weight: 600;\n  cursor: pointer;\n  transition: background 0.2s;\n}\n\n.form-btn:hover {\n  background: #5f27cd;\n}",
+          "notes": "Luôn đặt outline hoặc box-shadow cho :focus state — đây là yêu cầu accessibility (WCAG). Placeholder text nên nhạt màu hơn input text. Dùng ::placeholder pseudo-element để style placeholder."
+        }
+      ]
+    },
+    {
+      "id": "css-variables",
+      "title": "17. Biến CSS (Custom Properties)",
+      "description": "CSS Variables (--tên-biến) lưu giá trị tái sử dụng: màu sắc, font, spacing, border-radius... Khai báo trên :root để dùng toàn trang, hoặc trên component cụ thể. Điểm mạnh so với SASS variables: CSS Variables có thể thay đổi bằng JavaScript (runtime) → tạo Dark Mode, theme switching.",
+      "examples": [
+        {
+          "id": "variables-theming",
+          "title": "Khai Báo, Sử Dụng & Override Biến CSS",
+          "explanation": "Khai báo: --primary-color: #6c5ce7; Sử dụng: color: var(--primary-color); Fallback: var(--color, #000); Override: đặt lại biến trên selector con sẽ ghi đè giá trị cha — đây là nền tảng cho theming/dark mode.",
+          "html": "<div class=\"theme-demo\">\n  <button class=\"btn primary\">Nút Chính</button>\n  <button class=\"btn secondary\">Nút Phụ</button>\n  <button class=\"btn outline\">Nút Viền</button>\n</div>",
+          "css": "/* Khai báo biến toàn cục */\n:root {\n  --btn-color: #6c5ce7;\n  --btn-radius: 8px;\n  --btn-padding: 10px 20px;\n}\n\n.theme-demo {\n  display: flex;\n  gap: 10px;\n}\n\n.btn {\n  padding: var(--btn-padding);\n  border-radius: var(--btn-radius);\n  font-weight: 600;\n  font-size: 14px;\n  cursor: pointer;\n  border: 2px solid var(--btn-color);\n  transition: all 0.2s;\n}\n\n.primary {\n  background: var(--btn-color);\n  color: white;\n}\n\n.secondary {\n  /* Override biến cho riêng nút này! */\n  --btn-color: #00b894;\n  background: var(--btn-color);\n  color: white;\n}\n\n.outline {\n  background: transparent;\n  color: var(--btn-color);\n}",
+          "notes": "CSS Variables + JavaScript = Dark Mode: document.documentElement.style.setProperty('--bg-color', '#1a1a2e'). Framework như Tailwind, Chakra UI đều dùng CSS Variables làm nền tảng."
+        }
+      ]
+    },
+    {
+      "id": "css-functions",
+      "title": "18. Hàm CSS (calc, min, max, clamp)",
+      "description": "CSS Functions tính toán giá trị trực tiếp trong CSS. calc() trộn đơn vị (100% - 280px). min()/max() chọn giá trị nhỏ/lớn nhất. clamp() đặt giới hạn min-preferred-max. Đây là công cụ tạo layout linh hoạt mà không cần JavaScript.",
+      "examples": [
+        {
+          "id": "calc-demo",
+          "title": "calc() — Trộn Các Đơn Vị Khác Nhau",
+          "explanation": "calc() cho phép kết hợp %, px, rem, vw... trong 1 phép tính. Rất hay dùng cho: width: calc(100% - 280px) = chiều rộng content khi trừ đi sidebar. height: calc(100vh - 64px) = chiều cao còn lại sau header.",
+          "html": "<div class=\"calc-layout\">\n  <div class=\"calc-sidebar\">Sidebar (200px cố định)</div>\n  <div class=\"calc-content\">Content (100% - 200px - gap)</div>\n</div>",
+          "css": ".calc-layout {\n  display: flex;\n  gap: 12px;\n  height: 100px;\n}\n\n.calc-sidebar {\n  width: 200px; /* Cố định */\n  background: #636e72;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 6px;\n  font-size: 12px;\n}\n\n.calc-content {\n  /* Trừ sidebar + gap */\n  width: calc(100% - 200px - 12px);\n  background: #dfe6e9;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 6px;\n  font-size: 12px;\n}",
+          "notes": "Lưu ý: PHẢI có khoảng trắng quanh dấu + và -: calc(100% - 20px) ✅, calc(100%-20px) ❌. calc() có thể lồng nhau: calc(calc(100% - 40px) / 3)."
+        },
+        {
+          "id": "clamp-func",
+          "title": "clamp() — Font Size Tự Động Co Giãn",
+          "explanation": "clamp(MIN, PREFERRED, MAX) = giữ giá trị preferred nhưng không nhỏ hơn MIN và không lớn hơn MAX. Cực kỳ hữu ích cho responsive typography: font-size: clamp(1rem, 2.5vw, 2rem) → cỡ chữ co giãn theo viewport nhưng luôn trong khoảng 1rem-2rem.",
+          "html": "<h1 class=\"fluid-heading\">Tiêu Đề Co Giãn Linh Hoạt</h1>\n<p class=\"fluid-text\">Đoạn văn cũng co giãn nhưng trong khoảng giới hạn an toàn.</p>",
+          "css": "/* clamp(tối_thiểu, lý_tưởng, tối_đa) */\n.fluid-heading {\n  font-size: clamp(1.3rem, 4vw, 2.5rem);\n  color: #6c5ce7;\n  margin-bottom: 8px;\n}\n\n.fluid-text {\n  font-size: clamp(0.85rem, 1.8vw, 1.1rem);\n  color: #636e72;\n  line-height: 1.6;\n}",
+          "notes": "clamp() thay thế HOÀN TOÀN media query cho font-size responsive! Công thức phổ biến: clamp(16px, 1rem + 1vw, 24px). Dùng cho width, padding, gap cũng rất hiệu quả."
+        }
+      ]
+    },
+    {
+      "id": "specificity-cascade",
+      "title": "19. Specificity & Cascade (Độ Ưu Tiên)",
+      "description": "Khi nhiều CSS rule cùng nhắm 1 phần tử, rule nào THẮNG? Cascade (thác nước) và Specificity (độ đặc thù) quyết định. Đây là kiến thức QUAN TRỌNG NHẤT để debug CSS — nếu CSS không hoạt động, 90% là do specificity sai.",
+      "examples": [
+        {
+          "id": "specificity-rules",
+          "title": "Bảng Tính Specificity",
+          "explanation": "Specificity tính theo 4 cột: (inline, id, class, element). Inline style = (1,0,0,0) — cao nhất. #id = (0,1,0,0). .class, [attr], :pseudo-class = (0,0,1,0). element, ::pseudo-element = (0,0,0,1). So sánh từ trái sang phải. !important ghi đè mọi thứ (nhưng TRÁNH dùng!).",
+          "html": "<div id=\"demo\" class=\"box colored\">Tôi có màu gì?</div>\n<p class=\"hint\">Đáp án: xanh lá (#2ecc71) vì #id selector có specificity cao hơn .class</p>",
+          "css": "/* (0,0,0,1) — Element selector */\ndiv {\n  color: white;\n  padding: 15px;\n  border-radius: 8px;\n  font-weight: bold;\n  background: #e74c3c; /* Đỏ */\n}\n\n/* (0,0,1,0) — Class selector — thắng element */\n.colored {\n  background: #3498db; /* Xanh dương */\n}\n\n/* (0,0,2,0) — 2 class — thắng 1 class */\n.box.colored {\n  background: #f39c12; /* Cam */\n}\n\n/* (0,1,0,0) — ID selector — thắng class */\n#demo {\n  background: #2ecc71; /* Xanh lá ← THẮNG! */\n}\n\n.hint {\n  font-size: 12px;\n  color: #999;\n  margin-top: 8px;\n}",
+          "notes": "Thứ tự ưu tiên: !important > inline style > #id > .class > element > * (universal). Mẹo: TRÁNH dùng !important và #id trong CSS — chỉ dùng class selector để dễ quản lý specificity."
+        }
+      ]
+    },
+    {
+      "id": "units",
+      "title": "20. Đơn Vị CSS (px, em, rem, %, vw, vh)",
+      "description": "CSS có nhiều đơn vị kích thước, chia 2 nhóm: TUYỆT ĐỐI (px — không thay đổi) và TƯƠNG ĐỐI (em, rem, %, vw, vh — co giãn theo ngữ cảnh). Chọn đúng đơn vị giúp website responsive tự nhiên. Trong dự án thực tế, rem là đơn vị phổ biến nhất cho font-size và spacing.",
+      "examples": [
+        {
+          "id": "unit-comparison",
+          "title": "px vs em vs rem vs % vs vw",
+          "explanation": "px: cố định, không co giãn. em: nhân với font-size của phần tử CHA (lồng nhau sẽ nhân chồng — nguy hiểm!). rem: nhân với font-size của :root (html) — an toàn, dễ đoán. %: tỷ lệ so với phần tử cha. vw/vh: % so với viewport (1vw = 1% chiều rộng cửa sổ).",
+          "html": "<div class=\"unit-demo\">\n  <div class=\"u-box px\">16px</div>\n  <div class=\"u-box rem\">1rem</div>\n  <div class=\"u-box em\">1em</div>\n  <div class=\"u-box vw\">10vw</div>\n</div>\n<p class=\"unit-note\">rem luôn dựa vào html (16px mặc định), em dựa vào parent.</p>",
+          "css": ".unit-demo {\n  display: flex;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n\n.u-box {\n  padding: 10px;\n  border-radius: 6px;\n  font-weight: bold;\n  font-size: 13px;\n  color: white;\n  text-align: center;\n}\n\n.px  { background: #e74c3c; width: 80px;  } /* Luôn 80px */\n.rem { background: #3498db; width: 5rem;  } /* 5 × 16px = 80px */\n.em  { background: #2ecc71; width: 5em;   } /* 5 × font-size cha */\n.vw  { background: #9b59b6; width: 10vw;  } /* 10% viewport width */\n\n.unit-note {\n  font-size: 11px;\n  color: #999;\n  margin-top: 8px;\n}",
+          "notes": "💡 Best practice: dùng rem cho font-size + spacing, % hoặc vw cho width/height, px chỉ cho border-width và box-shadow. Tránh em cho font-size (hiệu ứng nhân chồng khi lồng nhau). Đặt html { font-size: 62.5%; } → 1rem = 10px giúp tính toán dễ dàng."
+        }
+      ]
+    }
+  ]
+}

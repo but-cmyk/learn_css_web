@@ -1,0 +1,36 @@
+.topic-section {
+  margin-bottom: 40px;
+  scroll-margin-top: calc(var(--header-height) + 20px);
+}
+
+.topic-header {
+  margin-bottom: 24px;
+}
+
+.topic-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.topic-title-bar {
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--cat-accent, var(--accent-primary));
+}
+
+.topic-description {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.topic-examples {
+  display: flex;
+  flex-direction: column;
+}
