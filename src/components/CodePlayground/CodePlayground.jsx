@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CodeEditor } from '../CodeEditor/CodeEditor';
 import { LivePreview } from '../LivePreview/LivePreview';
 import { CopyButton } from '../CopyButton/CopyButton';
@@ -11,8 +11,11 @@ export const CodePlayground = ({
   isSassMode = false
 }) => {
   const storageKey = exampleId ? `learn_css_saved_${exampleId}` : null;
+  const playgroundBodyRef = useRef(null);
 
   const [activeTab, setActiveTab] = useState(isSassMode ? 'css' : 'html');
+  const [splitPercent, setSplitPercent] = useState(50);
+  const [isResizingSplit, setIsResizingSplit] = useState(false);
 
   const [htmlCode, setHtmlCode] = useState(() => {
     if (storageKey) {
@@ -52,6 +55,40 @@ export const CodePlayground = ({
   });
 
   const [saveStatus, setSaveStatus] = useState('idle');
+
+  // Handle dragging split resizer
+  const handleResizerMouseDown = (e) => {
+    e.preventDefault();
+    setIsResizingSplit(true);
+  };
+
+  useEffect(() => {
+    if (!isResizingSplit || !playgroundBodyRef.current) return;
+
+    const handleMouseMove = (e) => {
+      const rect = playgroundBodyRef.current.getBoundingClientRect();
+      const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : rect.left + rect.width / 2);
+      const relativeX = clientX - rect.left;
+      const newPercent = Math.min(Math.max((relativeX / rect.width) * 100, 20), 80);
+      setSplitPercent(newPercent);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingSplit(false);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleMouseMove);
+    window.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleMouseMove);
+      window.removeEventListener('touchend', handleMouseUp);
+    };
+  }, [isResizingSplit]);
 
   const handleSave = () => {
     if (storageKey) {
@@ -126,8 +163,11 @@ export const CodePlayground = ({
         </div>
       </div>
 
-      <div className="playground-body">
-        <div className={`playground-editor ${isSassMode ? 'full-width' : ''}`}>
+      <div className="playground-body" ref={playgroundBodyRef}>
+        <div
+          className={`playground-editor ${isSassMode ? 'full-width' : ''}`}
+          style={!isSassMode ? { flex: `0 0 ${splitPercent}%` } : {}}
+        >
           {activeTab === 'html' && !isSassMode && (
             <CodeEditor
               code={htmlCode}
@@ -145,9 +185,26 @@ export const CodePlayground = ({
         </div>
 
         {!isSassMode && (
-          <div className="playground-preview">
-            <LivePreview html={htmlCode} css={cssCode} isSassMode={isSassMode} />
-          </div>
+          <>
+            <div
+              className={`playground-resizer ${isResizingSplit ? 'dragging' : ''}`}
+              onMouseDown={handleResizerMouseDown}
+              onTouchStart={handleResizerMouseDown}
+              title="Kéo để chỉnh kích thước Editor & Preview"
+            >
+              <div className="resizer-handle" />
+            </div>
+
+            <div
+              className="playground-preview"
+              style={{
+                flex: `0 0 calc(${100 - splitPercent}% - 8px)`,
+                pointerEvents: isResizingSplit ? 'none' : 'auto'
+              }}
+            >
+              <LivePreview html={htmlCode} css={cssCode} isSassMode={isSassMode} />
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -7,6 +7,14 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
 const MainLayout = () => {
+  // Sidebar Width state with persistence
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = localStorage.getItem('learn_css_sidebar_width');
+    return saved ? parseInt(saved, 10) : 280;
+  });
+
+  const [isResizingSidebar, setIsResizingSidebar] = useState(false);
+
   // Flatten all topics for default active topic detection
   const allTopics = useMemo(() => {
     return allKnowledgeData.flatMap(cat => cat.topics);
@@ -58,8 +66,51 @@ const MainLayout = () => {
     }
   }, [allTopics]);
 
+  // Sidebar drag resizer logic
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsResizingSidebar(true);
+  };
+
+  useEffect(() => {
+    if (!isResizingSidebar) return;
+
+    const handleMouseMove = (e) => {
+      const newWidth = Math.min(Math.max(e.clientX, 200), 500);
+      setSidebarWidth(newWidth);
+      localStorage.setItem('learn_css_sidebar_width', newWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingSidebar(false);
+    };
+
+    const handleTouchMove = (e) => {
+      if (e.touches[0]) {
+        const newWidth = Math.min(Math.max(e.touches[0].clientX, 200), 500);
+        setSidebarWidth(newWidth);
+        localStorage.setItem('learn_css_sidebar_width', newWidth);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleMouseUp);
+    };
+  }, [isResizingSidebar]);
+
   return (
-    <div className="app-container">
+    <div
+      className={`app-container ${isResizingSidebar ? 'is-resizing' : ''}`}
+      style={{ '--sidebar-width': `${sidebarWidth}px` }}
+    >
       <Header />
 
       <div className="app-body">
@@ -68,6 +119,15 @@ const MainLayout = () => {
           activeTopicId={activeTopicId}
           onTopicClick={(topicId) => changeActiveTopic(topicId, true)}
         />
+
+        <div
+          className={`sidebar-resizer ${isResizingSidebar ? 'dragging' : ''}`}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleMouseDown}
+          title="Kéo để chỉnh độ rộng Sidebar"
+        >
+          <div className="resizer-pill" />
+        </div>
 
         <ContentArea
           categories={allKnowledgeData}
