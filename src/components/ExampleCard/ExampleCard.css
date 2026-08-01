@@ -40,6 +40,8 @@
   font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--text-primary);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .toggle-playground-btn {
@@ -68,6 +70,8 @@
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
   line-height: 1.6;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .example-notes {
@@ -89,4 +93,6 @@
   font-size: var(--font-size-xs);
   color: var(--text-primary);
   line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }

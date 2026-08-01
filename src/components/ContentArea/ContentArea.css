@@ -1,10 +1,13 @@
 .content-area {
   flex: 1;
+  min-width: 0;
   margin-left: var(--sidebar-width);
   margin-right: auto;
   margin-top: var(--header-height);
   padding: 24px 32px 64px 32px;
-  max-width: 1400px;
+  max-width: calc(100vw - var(--sidebar-width));
+  word-break: break-word;
+  overflow-wrap: anywhere;
   transition: margin-left 0.25s ease;
 }
 
